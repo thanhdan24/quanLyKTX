@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hệ thống Web Quản lý Ký túc xá</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <div id="toast" class="toast"></div>
+  <div id="modal" class="modal" hidden></div>
+
+  <main id="loginPage" class="login-page">
+    <section class="login-card">
+      <div class="brand-mark">KTX</div>
+      <h1>Quản lý Ký túc xá</h1>
+      <p>Đăng nhập để sử dụng hệ thống theo vai trò sinh viên, cán bộ quản lý, kế toán hoặc quản trị viên.</p>
+      <form id="loginForm" class="form-stack">
+        <label>Tên đăng nhập
+          <input name="username" autocomplete="username" placeholder="sv001 / manager / accountant / admin" required>
+        </label>
+        <label>Mật khẩu
+          <input name="password" type="password" autocomplete="current-password" placeholder="123456" required>
+        </label>
+        <button class="btn primary" type="submit">Đăng nhập</button>
+      </form>
+      <div class="demo-box">
+        <strong>Tài khoản demo:</strong>
+        <span>sv001, sv002, manager, accountant, admin</span>
+        <span>Mật khẩu: 123456</span>
+      </div>
+    </section>
+  </main>
+
+  <main id="appPage" class="app-shell" hidden>
+    <aside class="sidebar">
+      <div class="side-brand">
+        <div class="brand-mark small">KTX</div>
+        <div>
+          <strong>QL Ký túc xá</strong>
+          <span id="roleText">...</span>
+        </div>
+      </div>
+      <nav id="menu" class="menu"></nav>
+      <button id="logoutBtn" class="btn ghost full">Đăng xuất</button>
+    </aside>
+    <section class="workspace">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Hệ thống Web Quản lý Ký túc xá</p>
+          <h2 id="viewTitle">Tổng quan</h2>
+        </div>
+        <div class="user-pill" id="userPill">...</div>
+      </header>
+      <section id="content" class="content"></section>
+    </section>
+  </main>
+
+  <script src="assets/js/core.js"></script>
+  <script src="assets/js/dashboard.js"></script>
+  <script src="assets/js/student.js"></script>
+  <script src="assets/js/manager.js"></script>
+  <script src="assets/js/accountant.js"></script>
+  <script src="assets/js/admin.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
