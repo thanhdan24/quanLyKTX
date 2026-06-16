@@ -25,12 +25,12 @@ module.exports = function registerRoutes(app, ctx) {
     }
     const result = await request.query(`
       SELECT rq.*, s.StudentCode, u.FullName AS StudentName, a.Status AS ApplicationStatus,
-             COALESCE(proc.FullName, '') AS ProcessedByName
+             COALESCE(processedUser.FullName, '') AS ProcessedByName
       FROM Requests rq
       JOIN Applications a ON rq.ApplicationID = a.ApplicationID
       JOIN Students s ON a.StudentID = s.StudentID
       JOIN Users u ON s.UserID = u.UserID
-      LEFT JOIN Users proc ON rq.ProcessedBy = proc.UserID
+      LEFT JOIN Users processedUser ON rq.ProcessedBy = processedUser.UserID
       WHERE ${clauses.join(' AND ')}
       ORDER BY rq.RequestID DESC
     `);
