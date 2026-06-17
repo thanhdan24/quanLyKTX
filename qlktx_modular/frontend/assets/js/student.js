@@ -4,7 +4,7 @@ async function renderStudentProfile() {
   const s = await api('/api/me/student');
   content.innerHTML = `
     <section class="card">
-      <h3>BM01 - Hồ sơ sinh viên</h3>
+      <h3>Hồ sơ sinh viên</h3>
       <form id="studentProfileForm" class="form-grid">
         <label>Họ và tên<input name="FullName" value="${esc(s.FullName)}" required></label>
         <label>Mã sinh viên<input value="${esc(s.StudentCode)}" disabled></label>
@@ -29,7 +29,7 @@ async function renderStudentRegister() {
   const openPeriods = lookups.RegistrationPeriods.filter((p) => p.Status === 'OPEN');
   content.innerHTML = `
     <section class="card">
-      <h3>BM02 - Phiếu đăng ký ở ký túc xá</h3>
+      <h3>Phiếu đăng ký ở ký túc xá</h3>
       ${openPeriods.length ? '' : '<p class="warn-text">Hiện chưa có đợt đăng ký đang mở. Sinh viên chỉ nộp hồ sơ khi đợt đăng ký OPEN và còn trong thời gian cho phép.</p>'}
       <form id="applicationForm" class="form-grid">
         <label>Đợt đăng ký<select name="PeriodID" required>${optionRows(openPeriods, 'PeriodID', 'PeriodName')}</select></label>
@@ -64,7 +64,7 @@ async function renderApplications() {
   `);
   content.innerHTML = `
     <section class="card">
-      <h3>BM06 - Danh sách hồ sơ đăng ký</h3>
+      <h3>Danh sách hồ sơ đăng ký</h3>
       <form id="studentAppFilter" class="filter-row">
         <select name="status"><option value="">Tất cả trạng thái</option><option value="PENDING">Chờ xử lý</option><option value="APPROVED">Đã duyệt</option><option value="REJECTED">Từ chối</option><option value="CHECKED_IN">Đã nhận phòng</option><option value="CHECKED_OUT">Đã trả phòng</option></select>
         <select name="periodId"><option value="">Tất cả đợt</option>${optionRows(lookups.RegistrationPeriods, 'PeriodID', 'PeriodName')}</select>
@@ -83,7 +83,7 @@ async function renderStudentPayments() {
   `);
   content.innerHTML = `
     <section class="card">
-      <h3>BM03 - Gửi thông tin thanh toán</h3>
+      <h3>Gửi thông tin thanh toán</h3>
       ${payable.length ? '' : '<p class="muted">Chỉ thanh toán khi hồ sơ đã được duyệt, đã phân phòng và đã có tổng tiền.</p>'}
       <form id="paymentForm" class="form-grid">
         <label>Hồ sơ<select name="ApplicationID" required>${payable.map((a) => `<option value="${a.ApplicationID}">#${a.ApplicationID} - ${esc(a.PeriodName)} - còn nợ ${money(a.DebtAmount || 0)}</option>`).join('')}</select></label>
@@ -110,7 +110,7 @@ async function renderStudentRequests() {
   `);
   content.innerHTML = `
     <section class="card">
-      <h3>BM05 - Phiếu yêu cầu phát sinh / phản ánh</h3>
+      <h3>Phiếu yêu cầu phát sinh / phản ánh</h3>
       <form id="requestForm" class="form-grid">
         <label>Hồ sơ<select name="ApplicationID" required>${activeApps.map((a) => `<option value="${a.ApplicationID}">#${a.ApplicationID} - ${esc(a.PeriodName)} - ${esc(a.RoomCode || 'chưa có phòng')}</option>`).join('')}</select></label>
         <label>Loại yêu cầu<select name="RequestType"><option value="EXTEND">Gia hạn</option><option value="TRANSFER">Chuyển phòng</option><option value="CHECKOUT">Trả phòng</option><option value="INCIDENT">Sự cố</option><option value="FEEDBACK">Phản ánh</option></select></label>
@@ -126,4 +126,5 @@ async function renderStudentRequests() {
     await runAction(() => api('/api/requests', { method: 'POST', body: JSON.stringify(formData(event.target)) }), 'Đã gửi yêu cầu.');
   };
 }
+
 

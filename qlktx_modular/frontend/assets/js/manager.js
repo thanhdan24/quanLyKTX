@@ -20,7 +20,7 @@ async function renderManagerApps() {
   window._rooms = rooms;
   content.innerHTML = `
     <section class="card">
-      <h3>BM04 - Phiếu xử lý hồ sơ / phân phòng</h3>
+      <h3>Phiếu xử lý hồ sơ / phân phòng</h3>
       <form id="managerAppFilter" class="filter-row">
         <input name="keyword" placeholder="Tên SV / Mã SV / phòng / tòa">
         <select name="status"><option value="">Tất cả trạng thái</option><option value="PENDING">Chờ xử lý</option><option value="APPROVED">Đã duyệt</option><option value="REJECTED">Từ chối</option><option value="CHECKED_IN">Đã nhận phòng</option><option value="CHECKED_OUT">Đã trả phòng</option></select>
@@ -76,7 +76,7 @@ async function renderManagerCheckin() {
       </td>
     </tr>
   `);
-  content.innerHTML = `<section class="card"><h3>BM07 - Phiếu nhận phòng / trả phòng</h3>${table(['Mã', 'Sinh viên', 'Phòng', 'Tài chính', 'Trạng thái', 'Thao tác'], rows)}</section>`;
+  content.innerHTML = `<section class="card"><h3>Phiếu nhận phòng / trả phòng</h3>${table(['Mã', 'Sinh viên', 'Phòng', 'Tài chính', 'Trạng thái', 'Thao tác'], rows)}</section>`;
 }
 
 async function checkIn(id) {
@@ -102,7 +102,7 @@ async function renderManagerRequests() {
   `);
   content.innerHTML = `
     <section class="card">
-      <h3>BM05 - Xử lý yêu cầu phát sinh</h3>
+      <h3>Xử lý yêu cầu phát sinh</h3>
       <form id="managerRequestFilter" class="filter-row">
         <input name="keyword" placeholder="Tên SV / Mã SV / tiêu đề">
         <select name="type"><option value="">Tất cả loại</option><option value="EXTEND">Gia hạn</option><option value="TRANSFER">Chuyển phòng</option><option value="CHECKOUT">Trả phòng</option><option value="INCIDENT">Sự cố</option><option value="FEEDBACK">Phản ánh</option></select>
@@ -129,7 +129,7 @@ async function renderResidenceReport() {
   const rows = rowsData.map((r) => `<tr><td>${esc(r.BuildingName)}</td><td>${esc(r.RoomCode)}</td><td>${r.Capacity}</td><td>${r.UsedBeds}</td><td>${r.AvailableBeds}</td><td>${badge(r.RoomStatus)}</td></tr>`);
   content.innerHTML = `
     <section class="card">
-      <h3>BM08 - Báo cáo cư trú</h3>
+      <h3>Báo cáo cư trú</h3>
       <form id="residenceFilter" class="filter-row">
         <select name="periodId"><option value="">Tất cả đợt</option>${optionRows(lookups.RegistrationPeriods, 'PeriodID', 'PeriodName')}</select>
         <button class="btn secondary" type="submit">Lọc</button>
@@ -151,3 +151,4 @@ window.submitAssignRoom = submitAssignRoom;
 window.checkIn = checkIn;
 window.checkOut = checkOut;
 window.processRequest = processRequest;
+

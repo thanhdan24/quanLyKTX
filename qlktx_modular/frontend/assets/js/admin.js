@@ -5,7 +5,7 @@ async function renderUsers() {
   const rows = users.map((u) => `
     <tr><td>#${u.UserID}</td><td>${esc(u.Username)}</td><td>${esc(u.FullName)}</td><td>${esc(roleNames[u.Role] || u.Role)}</td><td>${esc(u.Email || '')}<br><span class="muted">${esc(u.Phone || '')}</span></td><td>${badge(u.Status)}</td><td><button class="btn secondary small" onclick='openUserForm(${JSON.stringify(u).replace(/'/g, '&#39;')})'>Sửa</button> <button class="btn danger small" onclick="deleteUser(${u.UserID})">Xóa/khóa</button></td></tr>
   `);
-  content.innerHTML = `<section class="card"><div class="toolbar"><h3>BM11 - Tài khoản người dùng</h3><button class="btn primary" onclick="openUserForm()">Thêm tài khoản</button></div>${table(['Mã', 'Username', 'Họ tên', 'Vai trò', 'Liên hệ', 'Trạng thái', 'Thao tác'], rows)}</section>`;
+  content.innerHTML = `<section class="card"><div class="toolbar"><h3>Tài khoản người dùng</h3><button class="btn primary" onclick="openUserForm()">Thêm tài khoản</button></div>${table(['Mã', 'Username', 'Họ tên', 'Vai trò', 'Liên hệ', 'Trạng thái', 'Thao tác'], rows)}</section>`;
 }
 
 function openUserForm(user = null) {
@@ -42,7 +42,7 @@ async function renderStudents() {
   const rows = students.map((s) => `
     <tr><td>#${s.StudentID}</td><td>${esc(s.StudentCode)}</td><td>${esc(s.FullName)}<br><span class="muted">${esc(s.Username)}</span></td><td>${esc(labels[s.Gender] || s.Gender || '—')}</td><td>${esc(s.Faculty || '')}<br><span class="muted">${esc(s.ClassName || '')}</span></td><td>${badge(s.Status)}</td><td><button class="btn secondary small" onclick='openStudentForm(${JSON.stringify(s).replace(/'/g, '&#39;')})'>Sửa</button> <button class="btn danger small" onclick="deleteStudent(${s.StudentID})">Xóa</button></td></tr>
   `);
-  content.innerHTML = `<section class="card"><div class="toolbar"><h3>BM01 - Quản lý sinh viên</h3><button class="btn primary" onclick="openStudentForm()">Thêm hồ sơ</button></div>${table(['Mã', 'Mã SV', 'Tài khoản', 'Giới tính', 'Khoa/Lớp', 'Trạng thái', 'Thao tác'], rows)}</section>`;
+  content.innerHTML = `<section class="card"><div class="toolbar"><h3>Quản lý sinh viên</h3><button class="btn primary" onclick="openStudentForm()">Thêm hồ sơ</button></div>${table(['Mã', 'Mã SV', 'Tài khoản', 'Giới tính', 'Khoa/Lớp', 'Trạng thái', 'Thao tác'], rows)}</section>`;
 }
 
 function openStudentForm(student = null) {
@@ -76,7 +76,7 @@ async function deleteStudent(id) {
 async function renderBuildings() {
   const rowsData = await api('/api/buildings');
   const rows = rowsData.map((b) => `<tr><td>#${b.BuildingID}</td><td>${esc(b.BuildingName)}</td><td>${esc(labels[b.GenderScope] || b.GenderScope)}</td><td>${esc(b.Notes || '')}</td><td><button class="btn secondary small" onclick='openBuildingForm(${JSON.stringify(b).replace(/'/g, '&#39;')})'>Sửa</button> <button class="btn danger small" onclick="deleteBuilding(${b.BuildingID})">Xóa</button></td></tr>`);
-  content.innerHTML = `<section class="card"><div class="toolbar"><h3>BM12 - Danh mục tòa nhà</h3><button class="btn primary" onclick="openBuildingForm()">Thêm tòa nhà</button></div>${table(['Mã', 'Tên tòa', 'Phạm vi giới tính', 'Ghi chú', 'Thao tác'], rows)}</section>`;
+  content.innerHTML = `<section class="card"><div class="toolbar"><h3>Danh mục tòa nhà</h3><button class="btn primary" onclick="openBuildingForm()">Thêm tòa nhà</button></div>${table(['Mã', 'Tên tòa', 'Phạm vi giới tính', 'Ghi chú', 'Thao tác'], rows)}</section>`;
 }
 
 function openBuildingForm(b = null) {
@@ -100,7 +100,7 @@ async function renderRooms() {
   const [rooms, buildings] = await Promise.all([api('/api/rooms'), api('/api/buildings')]);
   window._buildings = buildings;
   const rows = rooms.map((r) => `<tr><td>#${r.RoomID}</td><td>${esc(r.BuildingName)} / ${esc(r.RoomCode)}</td><td>${r.FloorNo || '—'}</td><td>${r.UsedBeds || 0}/${r.Capacity}</td><td>${money(r.PricePerMonth)}</td><td>${esc(labels[r.GenderScope] || r.GenderScope)}</td><td>${badge(r.RoomStatus)}</td><td><button class="btn secondary small" onclick='openRoomForm(${JSON.stringify(r).replace(/'/g, '&#39;')})'>Sửa</button> <button class="btn danger small" onclick="deleteRoom(${r.RoomID})">Xóa</button></td></tr>`);
-  content.innerHTML = `<section class="card"><div class="toolbar"><h3>BM12 - Danh mục phòng</h3><button class="btn primary" onclick="openRoomForm()">Thêm phòng</button></div>${table(['Mã', 'Phòng', 'Tầng', 'Đang ở/Sức chứa', 'Đơn giá', 'Giới tính', 'Trạng thái', 'Thao tác'], rows)}</section>`;
+  content.innerHTML = `<section class="card"><div class="toolbar"><h3>Danh mục phòng</h3><button class="btn primary" onclick="openRoomForm()">Thêm phòng</button></div>${table(['Mã', 'Phòng', 'Tầng', 'Đang ở/Sức chứa', 'Đơn giá', 'Giới tính', 'Trạng thái', 'Thao tác'], rows)}</section>`;
 }
 
 function openRoomForm(r = null) {
@@ -135,7 +135,7 @@ async function deleteRoom(id) {
 async function renderPeriods() {
   const rowsData = await api('/api/periods');
   const rows = rowsData.map((p) => `<tr><td>#${p.PeriodID}</td><td>${esc(p.PeriodName)}</td><td>${date(p.StartDate)} - ${date(p.EndDate)}</td><td>${badge(p.Status)}</td><td>${esc(p.Notes || '')}</td><td><button class="btn secondary small" onclick='openPeriodForm(${JSON.stringify(p).replace(/'/g, '&#39;')})'>Sửa</button> <button class="btn danger small" onclick="deletePeriod(${p.PeriodID})">Xóa/đóng</button></td></tr>`);
-  content.innerHTML = `<section class="card"><div class="toolbar"><h3>BM12 - Đợt đăng ký</h3><button class="btn primary" onclick="openPeriodForm()">Thêm đợt</button></div>${table(['Mã', 'Tên đợt', 'Thời gian', 'Trạng thái', 'Ghi chú', 'Thao tác'], rows)}</section>`;
+  content.innerHTML = `<section class="card"><div class="toolbar"><h3>Đợt đăng ký</h3><button class="btn primary" onclick="openPeriodForm()">Thêm đợt</button></div>${table(['Mã', 'Tên đợt', 'Thời gian', 'Trạng thái', 'Ghi chú', 'Thao tác'], rows)}</section>`;
 }
 
 function openPeriodForm(p = null) {
@@ -178,3 +178,4 @@ window.deleteRoom = deleteRoom;
 window.openPeriodForm = openPeriodForm;
 window.submitPeriod = submitPeriod;
 window.deletePeriod = deletePeriod;
+

@@ -13,7 +13,7 @@ async function renderAccountantPayments() {
   `);
   content.innerHTML = `
     <section class="card">
-      <h3>BM03 - Xác nhận thanh toán</h3>
+      <h3>Xác nhận thanh toán</h3>
       <form id="accountantPaymentFilter" class="filter-row">
         <input name="keyword" placeholder="Tên SV / Mã SV / mã giao dịch">
         <select name="status"><option value="">Tất cả trạng thái</option><option value="PENDING">Chờ xác nhận</option><option value="CONFIRMED">Đã xác nhận</option><option value="REJECTED">Từ chối</option></select>
@@ -40,7 +40,7 @@ async function renderDebtReport() {
   `);
   content.innerHTML = `
     <section class="card">
-      <h3>BM09 - Danh sách công nợ</h3>
+      <h3>Danh sách công nợ</h3>
       <form id="debtFilter" class="filter-row">
         <input name="keyword" placeholder="Tên SV / Mã SV">
         <select name="periodId"><option value="">Tất cả đợt</option>${optionRows(lookups.RegistrationPeriods, 'PeriodID', 'PeriodName')}</select>
@@ -59,7 +59,7 @@ async function renderFeeReport() {
   const rows = rowsData.map((r) => `<tr><td>${esc(labels[r.PaymentMethod] || r.PaymentMethod)}</td><td>${badge(r.PaymentStatus)}</td><td>${r.TotalTransactions}</td><td>${money(r.TotalAmount)}</td></tr>`);
   content.innerHTML = `
     <section class="card">
-      <h3>BM10 - Báo cáo thu phí</h3>
+      <h3>Báo cáo thu phí</h3>
       <form id="feeFilter" class="filter-row">
         <select name="periodId"><option value="">Tất cả đợt</option>${optionRows(lookups.RegistrationPeriods, 'PeriodID', 'PeriodName')}</select>
         <select name="method"><option value="">Tất cả phương thức</option><option value="CASH">Tiền mặt</option><option value="TRANSFER">Chuyển khoản</option><option value="ONLINE">Trực tuyến</option></select>
@@ -72,3 +72,4 @@ async function renderFeeReport() {
 }
 
 window.confirmPayment = confirmPayment;
+

@@ -38,37 +38,63 @@ const labels = {
 
 const menus = {
   STUDENT: [
-    ['dashboard', '🏠 Tổng quan'],
-    ['student-profile', '👤 Hồ sơ sinh viên'],
-    ['student-register', '📝 Đăng ký ở KTX'],
-    ['student-apps', '📄 Theo dõi hồ sơ'],
-    ['student-payments', '💳 Thanh toán'],
-    ['student-requests', '📬 Yêu cầu phát sinh']
+    ['dashboard', 'Tổng quan'],
+    ['student-profile', 'Hồ sơ sinh viên'],
+    ['student-register', 'Đăng ký ở KTX'],
+    ['student-apps', 'Theo dõi hồ sơ'],
+    ['student-payments', 'Thanh toán'],
+    ['student-requests', 'Yêu cầu phát sinh']
   ],
   MANAGER: [
-    ['dashboard', '🏠 Tổng quan'],
-    ['manager-apps', '📋 Duyệt và phân phòng'],
-    ['manager-checkin', '🛏️ Nhận/trả phòng'],
-    ['manager-requests', '🧰 Xử lý yêu cầu'],
-    ['manager-residence-report', '📊 Báo cáo cư trú']
+    ['dashboard', 'Tổng quan'],
+    ['manager-apps', 'Duyệt và phân phòng'],
+    ['manager-checkin', 'Nhận / trả phòng'],
+    ['manager-requests', 'Xử lý yêu cầu'],
+    ['manager-residence-report', 'Báo cáo cư trú']
   ],
   ACCOUNTANT: [
-    ['dashboard', '🏠 Tổng quan'],
-    ['accountant-payments', '💳 Xác nhận thanh toán'],
-    ['accountant-debts', '📌 Theo dõi công nợ'],
-    ['accountant-fee-report', '📈 Báo cáo thu phí']
+    ['dashboard', 'Tổng quan'],
+    ['accountant-payments', 'Xác nhận thanh toán'],
+    ['accountant-debts', 'Theo dõi công nợ'],
+    ['accountant-fee-report', 'Báo cáo thu phí']
   ],
   ADMIN: [
-    ['dashboard', '🏠 Tổng quan'],
-    ['admin-users', '🔐 Tài khoản'],
-    ['admin-students', '🎓 Sinh viên'],
-    ['admin-buildings', '🏢 Tòa nhà'],
-    ['admin-rooms', '🚪 Phòng'],
-    ['admin-periods', '🗓️ Đợt đăng ký']
+    ['dashboard', 'Tổng quan'],
+    ['admin-users', 'Tài khoản'],
+    ['admin-students', 'Sinh viên'],
+    ['admin-buildings', 'Tòa nhà'],
+    ['admin-rooms', 'Phòng'],
+    ['admin-periods', 'Đợt đăng ký']
   ]
 };
 
-const titles = Object.fromEntries(Object.values(menus).flat().map(([k, v]) => [k, v.replace(/^[^ ]+ /, '')]));
+const menuIconPaths = {
+  dashboard: '<path d="M3 12 12 4l9 8"/><path d="M5 10v10h14V10M9 20v-6h6v6"/>',
+  'student-profile': '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+  'student-register': '<path d="M6 3h9l3 3v15H6z"/><path d="M14 3v4h4M9 12h6M9 16h4"/>',
+  'student-apps': '<path d="M5 4h14v16H5z"/><path d="M8 8h8M8 12h8M8 16h5"/>',
+  'student-payments': '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h4"/>',
+  'student-requests': '<path d="M4 5h16v12H8l-4 4z"/><path d="M8 9h8M8 13h5"/>',
+  'manager-apps': '<path d="M7 3h10v4H7z"/><path d="M5 5H4v16h16V5h-1M8 12l2 2 5-5M8 18h8"/>',
+  'manager-checkin': '<path d="M3 18v-8h18v8M5 10V5h6v5M13 10V7h6v3M3 18h18M5 18v3M19 18v3"/>',
+  'manager-requests': '<path d="m14.7 6.3 3 3M5 19l4.5-1 8.2-8.2a2.1 2.1 0 0 0-3-3L6.5 15z"/><path d="M13 5 9 3 4 5v6c0 2.5 1.2 4.5 3 6"/>',
+  'manager-residence-report': '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
+  'accountant-payments': '<path d="M3 7h18v13H3zM3 11h18M7 16h4"/><path d="M17 4v6M14 7h6"/>',
+  'accountant-debts': '<path d="M6 3h12v18H6z"/><path d="M9 8h6M9 12h6M9 16h3"/><circle cx="17.5" cy="17.5" r="3.5"/><path d="M17.5 15.5v2.3l1.4.8"/>',
+  'accountant-fee-report': '<path d="M4 20V9M10 20V4M16 20v-8M22 20H2"/><path d="m4 7 6-4 6 6 5-5"/>',
+  'admin-users': '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M16 11h6"/>',
+  'admin-students': '<path d="m2 9 10-5 10 5-10 5z"/><path d="M6 11v5c3 2 9 2 12 0v-5M22 9v6"/>',
+  'admin-buildings': '<path d="M4 21V8l8-5 8 5v13M8 21v-5h8v5M8 10h2M14 10h2M8 13h2M14 13h2"/>',
+  'admin-rooms': '<path d="M4 21V3h12v18M16 7h4v14M8 12h.01M2 21h20"/>',
+  'admin-periods': '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/>'
+};
+
+function menuIcon(view) {
+  const path = menuIconPaths[view] || menuIconPaths.dashboard;
+  return `<span class="menu-icon"><svg viewBox="0 0 24 24" aria-hidden="true">${path}</svg></span>`;
+}
+
+const titles = Object.fromEntries(Object.values(menus).flat().map(([k, v]) => [k, v]));
 titles.dashboard = 'Tổng quan';
 
 function esc(value) {
@@ -206,3 +232,4 @@ function optionRows(items, idKey, textKey, selected = '') {
 }
 
 window.closeModal = closeModal;
+
