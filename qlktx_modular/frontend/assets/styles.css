@@ -582,12 +582,18 @@ svg {
   background: linear-gradient(to bottom, transparent, rgba(94,234,212,.16), transparent);
 }
 .side-brand {
+  all: unset;
+  cursor: pointer;
   min-height: 58px;
   display: flex;
   align-items: center;
   gap: 11px;
   padding: 0 5px 17px;
   border-bottom: 1px solid rgba(255,255,255,.07);
+  transition: opacity .2s ease;
+}
+.side-brand:hover {
+  opacity: 0.85;
 }
 .side-brand .brand-symbol { width: 40px; height: 40px; color: #082d27; border: 0; box-shadow: 0 8px 22px rgba(20,184,166,.16); }
 .side-brand .brand-symbol svg { width: 23px; height: 23px; }
