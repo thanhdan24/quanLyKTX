@@ -39,11 +39,11 @@ module.exports = function registerRoutes(app, ctx) {
 
   app.post('/api/requests', auth, allow('STUDENT'), asyncHandler(async (req, res) => {
     requireFields(req.body, ['ApplicationID', 'RequestType', 'Title', 'Content']);
-    assertAllowed(req.body.RequestType, ['EXTEND', 'TRANSFER', 'CHECKOUT', 'INCIDENT', 'FEEDBACK'], 'Loai yeu cau');
+    assertAllowed(req.body.RequestType, ['EXTEND', 'TRANSFER', 'CHECKOUT', 'INCIDENT', 'FEEDBACK'], 'Loại yêu cầu');
     const pool = await poolPromise;
     const appRow = await getApplicationForAccess(pool, req.body.ApplicationID, req.user);
-    if (!appRow) return res.status(404).json({ message: 'Ho so khong ton tai hoac khong thuoc sinh vien dang nhap.' });
-    if (!['APPROVED', 'CHECKED_IN'].includes(appRow.Status)) return res.status(400).json({ message: 'Chi gui yeu cau khi ho so da duoc duyet hoac dang o KTX.' });
+    if (!appRow) return res.status(404).json({ message: 'Hồ sơ không tồn tại hoặc không thuộc sinh viên đang đăng nhập.' });
+    if (!['APPROVED', 'CHECKED_IN'].includes(appRow.Status)) return res.status(400).json({ message: 'Chỉ gửi yêu cầu khi hồ sơ đã được duyệt hoặc đang ở KTX.' });
     await pool.request()
       .input('ApplicationID', sql.Int, req.body.ApplicationID)
       .input('RequestType', sql.VarChar(20), req.body.RequestType)
@@ -53,17 +53,17 @@ module.exports = function registerRoutes(app, ctx) {
         INSERT INTO Requests (ApplicationID, RequestType, Title, Content, Status)
         VALUES (@ApplicationID, @RequestType, @Title, @Content, 'PENDING')
       `);
-    res.status(201).json({ message: 'Da gui yeu cau phat sinh.' });
+    res.status(201).json({ message: 'Đã gửi yêu cầu phát sinh.' });
   }));
 
   app.post('/api/requests/:id/process', auth, allow('MANAGER'), asyncHandler(async (req, res) => {
     requireFields(req.body, ['Status', 'ResultNote']);
-    assertAllowed(req.body.Status, ['APPROVED', 'REJECTED', 'DONE'], 'Trang thai yeu cau');
+    assertAllowed(req.body.Status, ['APPROVED', 'REJECTED', 'DONE'], 'Trạng thái yêu cầu');
     const pool = await poolPromise;
     const existing = await pool.request().input('RequestID', sql.Int, req.params.id).query('SELECT * FROM Requests WHERE RequestID=@RequestID');
     const row = existing.recordset[0];
-    if (!row) return res.status(404).json({ message: 'Khong tim thay yeu cau.' });
-    if (row.Status !== 'PENDING' && row.Status !== 'APPROVED') return res.status(400).json({ message: 'Yeu cau da xu ly xong, khong the xu ly lai.' });
+    if (!row) return res.status(404).json({ message: 'Không tìm thấy yêu cầu.' });
+    if (row.Status !== 'PENDING' && row.Status !== 'APPROVED') return res.status(400).json({ message: 'Yêu cầu đã xử lý xong, không thể xử lý lại.' });
     await pool.request()
       .input('RequestID', sql.Int, req.params.id)
       .input('Status', sql.VarChar(20), req.body.Status)
@@ -74,6 +74,6 @@ module.exports = function registerRoutes(app, ctx) {
         SET Status=@Status, ProcessedBy=@ProcessedBy, ProcessedAt=SYSDATETIME(), ResultNote=@ResultNote
         WHERE RequestID=@RequestID
       `);
-    res.json({ message: 'Da cap nhat yeu cau.' });
+    res.json({ message: 'Đã cập nhật yêu cầu.' });
   }));
 };

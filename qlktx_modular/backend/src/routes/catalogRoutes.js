@@ -17,7 +17,7 @@ module.exports = function registerRoutes(app, ctx) {
       .input('GenderScope', sql.VarChar(10), req.body.GenderScope)
       .input('Notes', sql.NVarChar(255), req.body.Notes || null)
       .query('INSERT INTO Buildings (BuildingName, GenderScope, Notes) VALUES (@BuildingName, @GenderScope, @Notes)');
-    res.status(201).json({ message: 'Da them toa nha.' });
+    res.status(201).json({ message: 'Đã thêm tòa nhà.' });
   }));
 
   app.put('/api/buildings/:id', auth, allow('ADMIN'), asyncHandler(async (req, res) => {
@@ -28,7 +28,7 @@ module.exports = function registerRoutes(app, ctx) {
       .input('GenderScope', sql.VarChar(10), req.body.GenderScope)
       .input('Notes', sql.NVarChar(255), req.body.Notes || null)
       .query('UPDATE Buildings SET BuildingName=@BuildingName, GenderScope=@GenderScope, Notes=@Notes WHERE BuildingID=@BuildingID');
-    res.json({ message: 'Da cap nhat toa nha.' });
+    res.json({ message: 'Đã cập nhật tòa nhà.' });
   }));
 
   app.delete('/api/buildings/:id', auth, allow('ADMIN'), asyncHandler(async (req, res) => {
@@ -41,11 +41,11 @@ module.exports = function registerRoutes(app, ctx) {
     `);
     const r = refs.recordset[0];
     if (Number(r.RoomCount) + Number(r.AppCount) > 0) {
-      return res.status(400).json({ message: 'Khong the xoa toa nha da co phong hoac ho so dang ky lien quan. Hay xoa/chuyen phong lien quan truoc.' });
+      return res.status(400).json({ message: 'Không thể xóa tòa nhà đã có phòng hoặc hồ sơ đăng ký liên quan. Hãy xóa/chuyển phòng liên quan trước.' });
     }
     const result = await pool.request().input('BuildingID', sql.Int, buildingId).query('DELETE FROM Buildings WHERE BuildingID=@BuildingID');
-    if (!result.rowsAffected[0]) return res.status(404).json({ message: 'Khong tim thay toa nha can xoa.' });
-    res.json({ message: 'Da xoa toa nha.' });
+    if (!result.rowsAffected[0]) return res.status(404).json({ message: 'Không tìm thấy tòa nhà cần xóa.' });
+    res.json({ message: 'Đã xóa tòa nhà.' });
   }));
 
   app.get('/api/rooms', auth, asyncHandler(async (req, res) => {
@@ -75,7 +75,7 @@ module.exports = function registerRoutes(app, ctx) {
         INSERT INTO Rooms (BuildingID, RoomCode, FloorNo, Capacity, PricePerMonth, GenderScope, RoomStatus, Notes)
         VALUES (@BuildingID, @RoomCode, @FloorNo, @Capacity, @PricePerMonth, @GenderScope, @RoomStatus, @Notes)
       `);
-    res.status(201).json({ message: 'Da them phong.' });
+    res.status(201).json({ message: 'Đã thêm phòng.' });
   }));
 
   app.put('/api/rooms/:id', auth, allow('ADMIN'), asyncHandler(async (req, res) => {
@@ -96,7 +96,7 @@ module.exports = function registerRoutes(app, ctx) {
             PricePerMonth=@PricePerMonth, GenderScope=@GenderScope, RoomStatus=@RoomStatus, Notes=@Notes
         WHERE RoomID=@RoomID
       `);
-    res.json({ message: 'Da cap nhat phong.' });
+    res.json({ message: 'Đã cập nhật phòng.' });
   }));
 
   app.delete('/api/rooms/:id', auth, allow('ADMIN'), asyncHandler(async (req, res) => {
@@ -105,11 +105,11 @@ module.exports = function registerRoutes(app, ctx) {
     const refs = await pool.request().input('RoomID', sql.Int, roomId).query('SELECT COUNT(*) AS Total FROM Applications WHERE AssignedRoomID=@RoomID');
     if (Number(refs.recordset[0].Total) > 0) {
       await pool.request().input('RoomID', sql.Int, roomId).query("UPDATE Rooms SET RoomStatus='INACTIVE' WHERE RoomID=@RoomID");
-      return res.json({ message: 'Phong co ho so lien quan nen da chuyen sang ngung dung thay vi xoa vat ly.' });
+      return res.json({ message: 'Phòng có hồ sơ liên quan nên đã chuyển sang ngừng dùng thay vì xóa vật lý.' });
     }
     const result = await pool.request().input('RoomID', sql.Int, roomId).query('DELETE FROM Rooms WHERE RoomID=@RoomID');
-    if (!result.rowsAffected[0]) return res.status(404).json({ message: 'Khong tim thay phong can xoa.' });
-    res.json({ message: 'Da xoa phong.' });
+    if (!result.rowsAffected[0]) return res.status(404).json({ message: 'Không tìm thấy phòng cần xóa.' });
+    res.json({ message: 'Đã xóa phòng.' });
   }));
 
   app.get('/api/periods', auth, asyncHandler(async (req, res) => {
@@ -131,7 +131,7 @@ module.exports = function registerRoutes(app, ctx) {
         INSERT INTO RegistrationPeriods (PeriodName, StartDate, EndDate, Status, Notes)
         VALUES (@PeriodName, @StartDate, @EndDate, @Status, @Notes)
       `);
-    res.status(201).json({ message: 'Da them dot dang ky.' });
+    res.status(201).json({ message: 'Đã thêm đợt đăng ký.' });
   }));
 
   app.put('/api/periods/:id', auth, allow('ADMIN'), asyncHandler(async (req, res) => {
@@ -148,7 +148,7 @@ module.exports = function registerRoutes(app, ctx) {
         SET PeriodName=@PeriodName, StartDate=@StartDate, EndDate=@EndDate, Status=@Status, Notes=@Notes
         WHERE PeriodID=@PeriodID
       `);
-    res.json({ message: 'Da cap nhat dot dang ky.' });
+    res.json({ message: 'Đã cập nhật đợt đăng ký.' });
   }));
 
   app.delete('/api/periods/:id', auth, allow('ADMIN'), asyncHandler(async (req, res) => {
@@ -157,10 +157,10 @@ module.exports = function registerRoutes(app, ctx) {
     const refs = await pool.request().input('PeriodID', sql.Int, periodId).query('SELECT COUNT(*) AS Total FROM Applications WHERE PeriodID=@PeriodID');
     if (Number(refs.recordset[0].Total) > 0) {
       await pool.request().input('PeriodID', sql.Int, periodId).query("UPDATE RegistrationPeriods SET Status='CLOSED' WHERE PeriodID=@PeriodID");
-      return res.json({ message: 'Dot dang ky co ho so lien quan nen da dong dot thay vi xoa vat ly.' });
+      return res.json({ message: 'Đợt đăng ký có hồ sơ liên quan nên đã đóng đợt thay vì xóa vật lý.' });
     }
     const result = await pool.request().input('PeriodID', sql.Int, periodId).query('DELETE FROM RegistrationPeriods WHERE PeriodID=@PeriodID');
-    if (!result.rowsAffected[0]) return res.status(404).json({ message: 'Khong tim thay dot dang ky can xoa.' });
-    res.json({ message: 'Da xoa dot dang ky.' });
+    if (!result.rowsAffected[0]) return res.status(404).json({ message: 'Không tìm thấy đợt đăng ký cần xóa.' });
+    res.json({ message: 'Đã xóa đợt đăng ký.' });
   }));
 };

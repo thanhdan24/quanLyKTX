@@ -49,20 +49,20 @@ module.exports = function registerRoutes(app, ctx) {
 
   app.post('/api/applications', auth, allow('STUDENT'), asyncHandler(async (req, res) => {
     requireFields(req.body, ['PeriodID', 'PreferredBuildingID', 'DurationMonths']);
-    const durationMonths = toPositiveInt(req.body.DurationMonths, 'So thang dang ky');
+    const durationMonths = toPositiveInt(req.body.DurationMonths, 'Số tháng đăng ký');
     const pool = await poolPromise;
     const student = await getStudentByUser(pool, req.user.UserID);
-    if (!student || student.Status !== 'ACTIVE') return res.status(400).json({ message: 'Ho so sinh vien chua hop le.' });
+    if (!student || student.Status !== 'ACTIVE') return res.status(400).json({ message: 'Hồ sơ sinh viên chưa hợp lệ.' });
   
     const period = await pool.request().input('PeriodID', sql.Int, req.body.PeriodID).query('SELECT * FROM RegistrationPeriods WHERE PeriodID=@PeriodID');
     const p = period.recordset[0];
     const today = new Date().toISOString().slice(0, 10);
     if (!p || p.Status !== 'OPEN' || today < p.StartDate.toISOString().slice(0, 10) || today > p.EndDate.toISOString().slice(0, 10)) {
-      return res.status(400).json({ message: 'Dot dang ky khong mo hoac nam ngoai thoi gian cho phep.' });
+      return res.status(400).json({ message: 'Đợt đăng ký không mở hoặc nằm ngoài thời gian cho phép.' });
     }
   
     const building = await pool.request().input('BuildingID', sql.Int, req.body.PreferredBuildingID).query('SELECT * FROM Buildings WHERE BuildingID=@BuildingID');
-    if (!building.recordset[0]) return res.status(400).json({ message: 'Toa nha mong muon khong ton tai.' });
+    if (!building.recordset[0]) return res.status(400).json({ message: 'Tòa nhà mong muốn không tồn tại.' });
   
     await pool.request()
       .input('StudentID', sql.Int, student.StudentID)
@@ -74,16 +74,16 @@ module.exports = function registerRoutes(app, ctx) {
         INSERT INTO Applications (StudentID, PeriodID, PreferredBuildingID, DurationMonths, AttachmentUrl, Status)
         VALUES (@StudentID, @PeriodID, @PreferredBuildingID, @DurationMonths, @AttachmentUrl, 'PENDING')
       `);
-    res.status(201).json({ message: 'Da nop ho so dang ky va cho can bo xu ly.' });
+    res.status(201).json({ message: 'Đã nộp hồ sơ đăng ký và chờ cán bộ xử lý.' });
   }));
 
   app.post('/api/applications/:id/decision', auth, allow('MANAGER'), asyncHandler(async (req, res) => {
     requireFields(req.body, ['Status']);
-    if (!['APPROVED', 'REJECTED'].includes(req.body.Status)) return res.status(400).json({ message: 'Trang thai xu ly khong hop le.' });
+    if (!['APPROVED', 'REJECTED'].includes(req.body.Status)) return res.status(400).json({ message: 'Trạng thái xử lý không hợp lệ.' });
     const pool = await poolPromise;
     const appRow = await getApplicationForAccess(pool, req.params.id, req.user);
-    if (!appRow) return res.status(404).json({ message: 'Khong tim thay ho so.' });
-    if (appRow.Status !== 'PENDING') return res.status(400).json({ message: 'Chi duoc duyet hoac tu choi ho so dang o trang thai PENDING.' });
+    if (!appRow) return res.status(404).json({ message: 'Không tìm thấy hồ sơ.' });
+    if (appRow.Status !== 'PENDING') return res.status(400).json({ message: 'Chỉ được duyệt hoặc từ chối hồ sơ đang ở trạng thái PENDING.' });
     await pool.request()
       .input('ApplicationID', sql.Int, req.params.id)
       .input('Status', sql.VarChar(20), req.body.Status)
@@ -94,15 +94,15 @@ module.exports = function registerRoutes(app, ctx) {
         SET Status=@Status, ApprovedBy=@ApprovedBy, ApprovedAt=SYSDATETIME(), Note=@Note
         WHERE ApplicationID=@ApplicationID
       `);
-    res.json({ message: req.body.Status === 'APPROVED' ? 'Da duyet ho so.' : 'Da tu choi ho so.' });
+    res.json({ message: req.body.Status === 'APPROVED' ? 'Đã duyệt hồ sơ.' : 'Đã từ chối hồ sơ.' });
   }));
 
   app.post('/api/applications/:id/assign-room', auth, allow('MANAGER'), asyncHandler(async (req, res) => {
     requireFields(req.body, ['RoomID']);
     const pool = await poolPromise;
     const appRow = await getApplicationForAccess(pool, req.params.id, req.user);
-    if (!appRow) return res.status(404).json({ message: 'Khong tim thay ho so.' });
-    if (appRow.Status !== 'APPROVED') return res.status(400).json({ message: 'Chi phan phong cho ho so da duyet.' });
+    if (!appRow) return res.status(404).json({ message: 'Không tìm thấy hồ sơ.' });
+    if (appRow.Status !== 'APPROVED') return res.status(400).json({ message: 'Chỉ phân phòng cho hồ sơ đã duyệt.' });
   
     const roomResult = await pool.request().input('RoomID', sql.Int, req.body.RoomID).query(`
       SELECT r.*, b.GenderScope AS BuildingGenderScope, b.BuildingName
@@ -110,11 +110,11 @@ module.exports = function registerRoutes(app, ctx) {
       WHERE r.RoomID=@RoomID
     `);
     const room = roomResult.recordset[0];
-    if (!room || room.RoomStatus !== 'AVAILABLE') return res.status(400).json({ message: 'Phong khong kha dung.' });
+    if (!room || room.RoomStatus !== 'AVAILABLE') return res.status(400).json({ message: 'Phòng không khả dụng.' });
     const genderOk = [room.GenderScope, room.BuildingGenderScope].every((scope) => scope === 'ALL' || scope === appRow.Gender || appRow.Gender === 'OTHER');
-    if (!genderOk) return res.status(400).json({ message: 'Phong khong phu hop gioi tinh cua sinh vien.' });
+    if (!genderOk) return res.status(400).json({ message: 'Phòng không phù hợp giới tính của sinh viên.' });
     const used = await roomOccupancy(pool, req.body.RoomID);
-    if (used >= Number(room.Capacity)) return res.status(400).json({ message: 'Phong da day.' });
+    if (used >= Number(room.Capacity)) return res.status(400).json({ message: 'Phòng đã đầy.' });
   
     const total = Number(appRow.DurationMonths) * Number(room.PricePerMonth);
     const tx = new sql.Transaction(pool);
@@ -136,17 +136,17 @@ module.exports = function registerRoutes(app, ctx) {
       await tx.rollback();
       throw error;
     }
-    res.json({ message: 'Da phan phong va tinh tong tien theo cong thuc QD04.', TotalAmount: total });
+    res.json({ message: 'Đã phân phòng và tính tổng tiền theo công thức QD04.', TotalAmount: total });
   }));
 
   app.post('/api/applications/:id/check-in', auth, allow('MANAGER'), asyncHandler(async (req, res) => {
     const pool = await poolPromise;
     const appRow = await getApplicationForAccess(pool, req.params.id, req.user);
-    if (!appRow) return res.status(404).json({ message: 'Khong tim thay ho so.' });
-    if (appRow.Status !== 'APPROVED') return res.status(400).json({ message: 'Ho so phai o trang thai da duyet.' });
-    if (!appRow.AssignedRoomID) return res.status(400).json({ message: 'Ho so chua duoc phan phong.' });
+    if (!appRow) return res.status(404).json({ message: 'Không tìm thấy hồ sơ.' });
+    if (appRow.Status !== 'APPROVED') return res.status(400).json({ message: 'Hồ sơ phải ở trạng thái đã duyệt.' });
+    if (!appRow.AssignedRoomID) return res.status(400).json({ message: 'Hồ sơ chưa được phân phòng.' });
     const paid = await confirmedPaid(pool, req.params.id);
-    if (paid < Number(appRow.TotalAmount || 0)) return res.status(400).json({ message: 'Chua thanh toan du so tien de nhan phong.' });
+    if (paid < Number(appRow.TotalAmount || 0)) return res.status(400).json({ message: 'Chưa thanh toán đủ số tiền để nhận phòng.' });
     await pool.request()
       .input('ApplicationID', sql.Int, req.params.id)
       .input('CheckInDate', sql.Date, req.body.CheckInDate || new Date())
@@ -155,14 +155,14 @@ module.exports = function registerRoutes(app, ctx) {
         SET Status='CHECKED_IN', CheckInDate=@CheckInDate
         WHERE ApplicationID=@ApplicationID
       `);
-    res.json({ message: 'Da xac nhan nhan phong.' });
+    res.json({ message: 'Đã xác nhận nhận phòng.' });
   }));
 
   app.post('/api/applications/:id/check-out', auth, allow('MANAGER'), asyncHandler(async (req, res) => {
     const pool = await poolPromise;
     const appRow = await getApplicationForAccess(pool, req.params.id, req.user);
-    if (!appRow) return res.status(404).json({ message: 'Khong tim thay ho so.' });
-    if (appRow.Status !== 'CHECKED_IN') return res.status(400).json({ message: 'Chi tra phong cho ho so da nhan phong.' });
+    if (!appRow) return res.status(404).json({ message: 'Không tìm thấy hồ sơ.' });
+    if (appRow.Status !== 'CHECKED_IN') return res.status(400).json({ message: 'Chỉ trả phòng cho hồ sơ đã nhận phòng.' });
   
     const tx = new sql.Transaction(pool);
     await tx.begin();
@@ -185,6 +185,6 @@ module.exports = function registerRoutes(app, ctx) {
       await tx.rollback();
       throw error;
     }
-    res.json({ message: 'Da xac nhan tra phong.' });
+    res.json({ message: 'Đã xác nhận trả phòng.' });
   }));
 };

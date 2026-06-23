@@ -15,13 +15,13 @@ module.exports = function registerRoutes(app, ctx) {
       .input('Username', sql.NVarChar(50), String(username).trim())
       .query('SELECT * FROM Users WHERE Username = @Username');
     const row = result.recordset[0];
-    if (!row) return res.status(401).json({ message: 'Sai ten dang nhap hoac mat khau.' });
-    if (row.Status !== 'ACTIVE') return res.status(403).json({ message: 'Tai khoan dang bi khoa hoac khong hoat dong.' });
+    if (!row) return res.status(401).json({ message: 'Sai tên đăng nhập hoặc mật khẩu.' });
+    if (row.Status !== 'ACTIVE') return res.status(403).json({ message: 'Tài khoản đang bị khóa hoặc không hoạt động.' });
   
     const stored = String(row.PasswordHash || '').trim();
     const pass = String(password);
     const ok = stored === pass || stored.toLowerCase() === sha256(pass).toLowerCase();
-    if (!ok) return res.status(401).json({ message: 'Sai ten dang nhap hoac mat khau.' });
+    if (!ok) return res.status(401).json({ message: 'Sai tên đăng nhập hoặc mật khẩu.' });
   
     const user = publicUser(row);
     res.json({ token: signToken(user), user });

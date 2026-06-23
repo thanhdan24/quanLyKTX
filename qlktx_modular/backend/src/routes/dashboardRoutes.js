@@ -24,9 +24,9 @@ module.exports = function registerRoutes(app, ctx) {
         WHERE a.StudentID = @StudentID
       `);
       data.cards = [
-        { label: 'Ho so da nop', value: apps.recordset.length },
-        { label: 'Da nhan phong', value: apps.recordset.filter((x) => x.Status === 'CHECKED_IN').length },
-        { label: 'Thanh toan cho xac nhan', value: payments.recordset.filter((x) => x.PaymentStatus === 'PENDING').length }
+        { label: 'Hồ sơ đã nộp', value: apps.recordset.length },
+        { label: 'Đã nhận phòng', value: apps.recordset.filter((x) => x.Status === 'CHECKED_IN').length },
+        { label: 'Thanh toán chờ xác nhận', value: payments.recordset.filter((x) => x.PaymentStatus === 'PENDING').length }
       ];
       data.recent = apps.recordset;
     } else {
@@ -39,12 +39,12 @@ module.exports = function registerRoutes(app, ctx) {
       const count = (rows, key, value) => rows.find((x) => x[key] === value)?.Total || 0;
       const confirmedAmount = payments.recordset.find((x) => x.PaymentStatus === 'CONFIRMED')?.Amount || 0;
       data.cards = [
-        { label: 'Ho so cho duyet', value: count(apps.recordset, 'Status', 'PENDING') },
-        { label: 'Da nhan phong', value: count(apps.recordset, 'Status', 'CHECKED_IN') },
-        { label: 'Thanh toan cho xac nhan', value: count(payments.recordset, 'PaymentStatus', 'PENDING') },
-        { label: 'Tong tien da thu', value: confirmedAmount, money: true },
-        { label: 'Yeu cau cho xu ly', value: count(requests.recordset, 'Status', 'PENDING') },
-        { label: 'Phong kha dung', value: count(rooms.recordset, 'RoomStatus', 'AVAILABLE') }
+        { label: 'Hồ sơ chờ duyệt', value: count(apps.recordset, 'Status', 'PENDING') },
+        { label: 'Đã nhận phòng', value: count(apps.recordset, 'Status', 'CHECKED_IN') },
+        { label: 'Thanh toán chờ xác nhận', value: count(payments.recordset, 'PaymentStatus', 'PENDING') },
+        { label: 'Tổng tiền đã thu', value: confirmedAmount, money: true },
+        { label: 'Yêu cầu chờ xử lý', value: count(requests.recordset, 'Status', 'PENDING') },
+        { label: 'Phòng khả dụng', value: count(rooms.recordset, 'RoomStatus', 'AVAILABLE') }
       ];
     }
     res.json(data);
@@ -66,7 +66,7 @@ module.exports = function registerRoutes(app, ctx) {
     await tx.begin();
     try {
       const student = await getStudentByUser(pool, req.user.UserID);
-      if (!student) throw Object.assign(new Error('Khong tim thay ho so sinh vien.'), { status: 404 });
+      if (!student) throw Object.assign(new Error('Không tìm thấy hồ sơ sinh viên.'), { status: 404 });
       await new sql.Request(tx)
         .input('UserID', sql.Int, req.user.UserID)
         .input('FullName', sql.NVarChar(120), req.body.FullName || req.user.FullName)
@@ -85,7 +85,7 @@ module.exports = function registerRoutes(app, ctx) {
           WHERE StudentID=@StudentID
         `);
       await tx.commit();
-      res.json({ message: 'Da cap nhat ho so sinh vien.' });
+      res.json({ message: 'Đã cập nhật hồ sơ sinh viên.' });
     } catch (error) {
       await tx.rollback();
       throw error;
