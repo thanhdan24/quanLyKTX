@@ -120,8 +120,9 @@ $('loginForm').onsubmit = async (event) => {
 
 $('logoutBtn').onclick = logout;
 $('mobileMenuBtn').onclick = () => setSidebar(true);
-$('closeSidebarBtn').onclick = () => setSidebar(false);
+$('closeSidebarBtn').onclick = (e) => { e.stopPropagation(); setSidebar(false); };
 $('sidebarBackdrop').onclick = () => setSidebar(false);
+$('brandLink').onclick = (e) => { e.preventDefault(); navigate('dashboard'); setSidebar(false); };
 
 $('togglePassword').onclick = () => {
   const input = $('passwordInput');

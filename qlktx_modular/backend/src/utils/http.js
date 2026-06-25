@@ -7,7 +7,7 @@ function asyncHandler(fn) {
 function requireFields(body, fields) {
   const missing = fields.filter((field) => body[field] === undefined || body[field] === null || String(body[field]).trim() === '');
   if (missing.length) {
-    const error = new Error(`Thieu thong tin bat buoc: ${missing.join(', ')}`);
+    const error = new Error(`Thiếu thông tin bắt buộc: ${missing.join(', ')}`);
     error.status = 400;
     throw error;
   }
@@ -15,7 +15,7 @@ function requireFields(body, fields) {
 
 function assertAllowed(value, allowed, label) {
   if (!allowed.includes(value)) {
-    const error = new Error(`${label || 'Gia tri'} khong hop le. Gia tri cho phep: ${allowed.join(', ')}`);
+    const error = new Error(`${label || 'Giá trị'} không hợp lệ. Giá trị cho phép: ${allowed.join(', ')}`);
     error.status = 400;
     throw error;
   }
@@ -24,7 +24,7 @@ function assertAllowed(value, allowed, label) {
 function toPositiveInt(value, label) {
   const n = Number(value);
   if (!Number.isInteger(n) || n <= 0) {
-    const error = new Error(`${label || 'Gia tri'} phai la so nguyen duong.`);
+    const error = new Error(`${label || 'Giá trị'} phải là số nguyên dương.`);
     error.status = 400;
     throw error;
   }
@@ -34,7 +34,7 @@ function toPositiveInt(value, label) {
 function toPositiveMoney(value, label) {
   const n = Number(value);
   if (!Number.isFinite(n) || n <= 0) {
-    const error = new Error(`${label || 'So tien'} phai lon hon 0.`);
+    const error = new Error(`${label || 'Số tiền'} phải lớn hơn 0.`);
     error.status = 400;
     throw error;
   }

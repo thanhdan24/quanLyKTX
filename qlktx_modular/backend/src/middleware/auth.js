@@ -8,7 +8,7 @@ async function auth(req, res, next) {
     const header = req.headers.authorization || '';
     const token = header.startsWith('Bearer ') ? header.slice(7) : '';
     const payload = verifyToken(token);
-    if (!payload?.UserID) return res.status(401).json({ message: 'Chua dang nhap hoac token khong hop le.' });
+    if (!payload?.UserID) return res.status(401).json({ message: 'Chưa đăng nhập hoặc token không hợp lệ.' });
 
     const pool = await poolPromise;
     const result = await pool.request()
@@ -19,7 +19,7 @@ async function auth(req, res, next) {
         WHERE UserID = @UserID
       `);
     const user = result.recordset[0];
-    if (!user || user.Status !== 'ACTIVE') return res.status(401).json({ message: 'Tai khoan khong con hoat dong.' });
+    if (!user || user.Status !== 'ACTIVE') return res.status(401).json({ message: 'Tài khoản không còn hoạt động.' });
     req.user = publicUser(user);
     next();
   } catch (error) {
@@ -29,7 +29,7 @@ async function auth(req, res, next) {
 
 function allow(...roles) {
   return (req, res, next) => {
-    if (!roles.includes(req.user?.Role)) return res.status(403).json({ message: 'Ban khong co quyen thuc hien thao tac nay.' });
+    if (!roles.includes(req.user?.Role)) return res.status(403).json({ message: 'Bạn không có quyền thực hiện thao tác này.' });
     next();
   };
 }

@@ -31,11 +31,11 @@ if (process.env.DB_INSTANCE) {
 const poolPromise = new sql.ConnectionPool(config)
   .connect()
   .then((pool) => {
-    console.log('Da ket noi SQL Server:', config.server, config.database);
+    console.log('Đã kết nối SQL Server:', config.server, config.database);
     return pool;
   })
   .catch((error) => {
-    console.error('Loi ket noi SQL Server:', error.message);
+    console.error('Lỗi kết nối SQL Server:', error.message);
     throw error;
   });
 

@@ -39,16 +39,16 @@ module.exports = function registerRoutes(app, ctx) {
 
   app.post('/api/payments', auth, allow('STUDENT'), asyncHandler(async (req, res) => {
     requireFields(req.body, ['ApplicationID', 'Amount', 'PaymentMethod']);
-    assertAllowed(req.body.PaymentMethod, ['CASH', 'TRANSFER', 'ONLINE'], 'Phuong thuc thanh toan');
-    const amount = toPositiveMoney(req.body.Amount, 'So tien thanh toan');
+    assertAllowed(req.body.PaymentMethod, ['CASH', 'TRANSFER', 'ONLINE'], 'Phương thức thanh toán');
+    const amount = toPositiveMoney(req.body.Amount, 'Số tiền thanh toán');
     if (['TRANSFER', 'ONLINE'].includes(req.body.PaymentMethod) && !normalizeText(req.body.TransactionCode)) {
       return res.status(400).json({ message: 'Thanh toan chuyen khoan/truc tuyen phai co ma giao dich.' });
     }
     const pool = await poolPromise;
     const appRow = await getApplicationForAccess(pool, req.body.ApplicationID, req.user);
-    if (!appRow) return res.status(404).json({ message: 'Ho so khong ton tai hoac khong thuoc sinh vien dang nhap.' });
-    if (!appRow.TotalAmount) return res.status(400).json({ message: 'Ho so chua co tong tien, vui long cho can bo phan phong.' });
-    if (!['APPROVED', 'CHECKED_IN'].includes(appRow.Status)) return res.status(400).json({ message: 'Chi gui thanh toan cho ho so da duyet hoac dang o KTX.' });
+    if (!appRow) return res.status(404).json({ message: 'Hồ sơ không tồn tại hoặc không thuộc sinh viên đang đăng nhập.' });
+    if (!appRow.TotalAmount) return res.status(400).json({ message: 'Hồ sơ chưa có tổng tiền, vui lòng chờ cán bộ phân phòng.' });
+    if (!['APPROVED', 'CHECKED_IN'].includes(appRow.Status)) return res.status(400).json({ message: 'Chỉ gửi thanh toán cho hồ sơ đã duyệt hoặc đang ở KTX.' });
     await pool.request()
       .input('ApplicationID', sql.Int, req.body.ApplicationID)
       .input('Amount', sql.Decimal(18, 2), amount)
@@ -59,20 +59,20 @@ module.exports = function registerRoutes(app, ctx) {
         INSERT INTO Payments (ApplicationID, Amount, PaymentMethod, TransactionCode, PaymentStatus, PaidAt, Note)
         VALUES (@ApplicationID, @Amount, @PaymentMethod, @TransactionCode, 'PENDING', SYSDATETIME(), @Note)
       `);
-    res.status(201).json({ message: 'Da gui thong tin thanh toan, cho ke toan xac nhan.' });
+    res.status(201).json({ message: 'Đã gửi thông tin thanh toán, chờ kế toán xác nhận.' });
   }));
 
   app.post('/api/payments/:id/confirm', auth, allow('ACCOUNTANT'), asyncHandler(async (req, res) => {
     requireFields(req.body, ['PaymentStatus']);
-    assertAllowed(req.body.PaymentStatus, ['CONFIRMED', 'REJECTED'], 'Trang thai thanh toan');
+    assertAllowed(req.body.PaymentStatus, ['CONFIRMED', 'REJECTED'], 'Trạng thái thanh toán');
     const pool = await poolPromise;
     const payment = await pool.request().input('PaymentID', sql.Int, req.params.id).query('SELECT * FROM Payments WHERE PaymentID=@PaymentID');
     const row = payment.recordset[0];
-    if (!row) return res.status(404).json({ message: 'Khong tim thay thanh toan.' });
-    if (row.PaymentStatus !== 'PENDING') return res.status(400).json({ message: 'Chi doi soat thanh toan dang cho xac nhan.' });
-    if (Number(row.Amount) <= 0 || !row.PaymentMethod || !row.ApplicationID) return res.status(400).json({ message: 'Thanh toan thieu Amount, PaymentMethod hoac ho so lien quan.' });
+    if (!row) return res.status(404).json({ message: 'Không tìm thấy thanh toán.' });
+    if (row.PaymentStatus !== 'PENDING') return res.status(400).json({ message: 'Chỉ đối soát thanh toán đang chờ xác nhận.' });
+    if (Number(row.Amount) <= 0 || !row.PaymentMethod || !row.ApplicationID) return res.status(400).json({ message: 'Thanh toán thiếu Amount, PaymentMethod hoặc hồ sơ liên quan.' });
     if (['TRANSFER', 'ONLINE'].includes(row.PaymentMethod) && !normalizeText(row.TransactionCode)) {
-      return res.status(400).json({ message: 'Thanh toan chuyen khoan/truc tuyen phai co ma giao dich moi duoc xac nhan.' });
+      return res.status(400).json({ message: 'Thanh toán chuyển khoản/trực tuyến phải có mã giao dịch mới được xác nhận.' });
     }
     await pool.request()
       .input('PaymentID', sql.Int, req.params.id)
@@ -84,6 +84,6 @@ module.exports = function registerRoutes(app, ctx) {
         SET PaymentStatus=@PaymentStatus, ConfirmedBy=@ConfirmedBy, PaidAt=SYSDATETIME(), Note=COALESCE(@Note, Note)
         WHERE PaymentID=@PaymentID
       `);
-    res.json({ message: req.body.PaymentStatus === 'CONFIRMED' ? 'Da xac nhan thanh toan.' : 'Da tu choi thanh toan.' });
+    res.json({ message: req.body.PaymentStatus === 'CONFIRMED' ? 'Đã xác nhận thanh toán.' : 'Đã từ chối thanh toán.' });
   }));
 };

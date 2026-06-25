@@ -16,7 +16,7 @@ module.exports = function registerRoutes(app, ctx) {
   app.post('/api/users', auth, allow('ADMIN'), asyncHandler(async (req, res) => {
     requireFields(req.body, ['Username', 'Password', 'FullName', 'Role']);
     assertAllowed(req.body.Role, ['STUDENT', 'MANAGER', 'ACCOUNTANT', 'ADMIN'], 'Vai tro');
-    assertAllowed(req.body.Status || 'ACTIVE', ['ACTIVE', 'INACTIVE', 'LOCKED'], 'Trang thai tai khoan');
+    assertAllowed(req.body.Status || 'ACTIVE', ['ACTIVE', 'INACTIVE', 'LOCKED'], 'Trạng thái tài khoản');
   
     const pool = await poolPromise;
     const tx = new sql.Transaction(pool);
@@ -37,7 +37,7 @@ module.exports = function registerRoutes(app, ctx) {
         `);
       const userId = created.recordset[0].UserID;
   
-      // UC12: khi tao tai khoan sinh vien, co the tao luon ho so Students tuong ung.
+      // UC12: khi tạo tài khoản sinh viên, có thể tạo luôn hồ sơ Students tương ứng.
       if (req.body.Role === 'STUDENT') {
         requireFields(req.body, ['StudentCode']);
         assertAllowed(req.body.Gender || 'OTHER', ['MALE', 'FEMALE', 'OTHER'], 'Gioi tinh');
@@ -56,7 +56,7 @@ module.exports = function registerRoutes(app, ctx) {
       }
   
       await tx.commit();
-      res.status(201).json({ message: req.body.Role === 'STUDENT' ? 'Da tao tai khoan va ho so sinh vien.' : 'Da tao tai khoan.', UserID: userId });
+      res.status(201).json({ message: req.body.Role === 'STUDENT' ? 'Đã tạo tài khoản và hồ sơ sinh viên.' : 'Đã tạo tài khoản.', UserID: userId });
     } catch (error) {
       await tx.rollback();
       throw error;
@@ -82,13 +82,13 @@ module.exports = function registerRoutes(app, ctx) {
       SET FullName=@FullName, Role=@Role, Phone=@Phone, Email=@Email, Status=@Status ${setPassword}
       WHERE UserID=@UserID
     `);
-    res.json({ message: 'Da cap nhat tai khoan.' });
+    res.json({ message: 'Đã cập nhật tài khoản.' });
   }));
 
   app.delete('/api/users/:id', auth, allow('ADMIN'), asyncHandler(async (req, res) => {
     const userId = Number(req.params.id);
     if (userId === req.user.UserID) {
-      return res.status(400).json({ message: 'Khong the xoa/khoa tai khoan dang dang nhap.' });
+      return res.status(400).json({ message: 'Không thể xóa/khóa tài khoản đang đăng nhập.' });
     }
     const pool = await poolPromise;
     const refs = await pool.request()
@@ -104,11 +104,11 @@ module.exports = function registerRoutes(app, ctx) {
     const hasRefs = Number(r.StudentCount) + Number(r.ApprovedCount) + Number(r.PaymentCount) + Number(r.RequestCount) > 0;
     if (hasRefs) {
       await pool.request().input('UserID', sql.Int, userId).query("UPDATE Users SET Status='LOCKED' WHERE UserID=@UserID");
-      return res.json({ message: 'Tai khoan co du lieu lien quan nen da duoc khoa thay vi xoa vat ly.' });
+      return res.json({ message: 'Tài khoản có dữ liệu liên quan nên đã được khóa thay vì xóa vật lý.' });
     }
     const result = await pool.request().input('UserID', sql.Int, userId).query('DELETE FROM Users WHERE UserID=@UserID');
-    if (!result.rowsAffected[0]) return res.status(404).json({ message: 'Khong tim thay tai khoan can xoa.' });
-    res.json({ message: 'Da xoa tai khoan.' });
+    if (!result.rowsAffected[0]) return res.status(404).json({ message: 'Không tìm thấy tài khoản cần xóa.' });
+    res.json({ message: 'Đã xóa tài khoản.' });
   }));
 
   app.get('/api/students', auth, allow('ADMIN', 'MANAGER', 'ACCOUNTANT'), asyncHandler(async (req, res) => {
@@ -136,7 +136,7 @@ module.exports = function registerRoutes(app, ctx) {
         INSERT INTO Students (UserID, StudentCode, Gender, DateOfBirth, Faculty, ClassName, Status)
         VALUES (@UserID, @StudentCode, @Gender, @DateOfBirth, @Faculty, @ClassName, @Status)
       `);
-    res.status(201).json({ message: 'Da tao ho so sinh vien.' });
+    res.status(201).json({ message: 'Đã tạo hồ sơ sinh viên.' });
   }));
 
   app.put('/api/students/:id', auth, allow('ADMIN'), asyncHandler(async (req, res) => {
@@ -155,7 +155,7 @@ module.exports = function registerRoutes(app, ctx) {
             Faculty=@Faculty, ClassName=@ClassName, Status=@Status
         WHERE StudentID=@StudentID
       `);
-    res.json({ message: 'Da cap nhat sinh vien.' });
+    res.json({ message: 'Đã cập nhật sinh viên.' });
   }));
 
   app.delete('/api/students/:id', auth, allow('ADMIN'), asyncHandler(async (req, res) => {
@@ -164,10 +164,10 @@ module.exports = function registerRoutes(app, ctx) {
     const refs = await pool.request().input('StudentID', sql.Int, studentId).query('SELECT COUNT(*) AS Total FROM Applications WHERE StudentID=@StudentID');
     if (Number(refs.recordset[0].Total) > 0) {
       await pool.request().input('StudentID', sql.Int, studentId).query("UPDATE Students SET Status='INACTIVE' WHERE StudentID=@StudentID");
-      return res.json({ message: 'Sinh vien co ho so dang ky lien quan nen da chuyen sang ngung hoat dong.' });
+      return res.json({ message: 'Sinh viên có hồ sơ đăng ký liên quan nên đã chuyển sang ngừng hoạt động.' });
     }
     const result = await pool.request().input('StudentID', sql.Int, studentId).query('DELETE FROM Students WHERE StudentID=@StudentID');
-    if (!result.rowsAffected[0]) return res.status(404).json({ message: 'Khong tim thay sinh vien can xoa.' });
-    res.json({ message: 'Da xoa sinh vien.' });
+    if (!result.rowsAffected[0]) return res.status(404).json({ message: 'Không tìm thấy sinh viên cần xóa.' });
+    res.json({ message: 'Đã xóa sinh viên.' });
   }));
 };
