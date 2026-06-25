@@ -1,5 +1,5 @@
 @echo off
 cd /d %~dp0backend
-npm install
-npm start
+call npm install
+call npm start
 pause
