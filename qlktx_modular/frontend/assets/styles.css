@@ -2247,3 +2247,38 @@ td .muted {
 .logout-btn:hover {
   color: #ffffff !important; /* Sáng hẳn lên khi di chuột */
 }
+/* ===== KHÔI PHỤC GIAO DIỆN CHUẨN CHO SIDEBAR HEADER ===== */
+
+/* 1. Xóa nền trắng và bóng mờ bị áp nhầm lên toàn bộ khung Header */
+.side-brand {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07) !important;
+}
+
+/* 2. Chỉ giữ nền trắng và bóng đỏ cho riêng cục Logo PTIT */
+.side-brand .brand-symbol {
+  background: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.72) !important;
+  box-shadow: 0 8px 22px rgba(229, 31, 24, 0.2) !important;
+}
+
+/* 3. Đảm bảo chữ "KTX PTIT" và chức vụ luôn hiển thị màu trắng/sáng */
+.side-brand-text strong {
+  color: #f6f9fd !important;
+}
+.side-brand-text span {
+  color: #8595ac !important;
+}
+
+/* 4. Đưa nút Đóng (X) về nền tối trong suốt để chìm êm vào Sidebar */
+.sidebar-close {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.07) !important;
+  color: #8fa0b7 !important;
+}
+.sidebar-close:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: #ffffff !important;
+}
