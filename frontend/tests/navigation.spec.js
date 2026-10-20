@@ -82,6 +82,15 @@ for (const [role, views] of Object.entries(routes)) {
     await page.goBack();
     await expect(page).toHaveURL(new RegExp(`/${views.at(-1)}$`));
     await expect(page.locator('#content .card').first()).toBeVisible();
+    await page.locator('#menu a[href="/dashboard"]').click();
+    await expect(page.locator('.quick-action')).toHaveCount(views.length - 1);
+    const shortcuts = await page.locator('.quick-action').evaluateAll(links => links.map(link => link.getAttribute('href')));
+    expect(shortcuts).toEqual(views.slice(1).map(view => `/${view}`));
+    await page.evaluate(() => { window.__navigationCheck = true; });
+    const target = await page.locator('.hero-action').getAttribute('href');
+    await page.locator('.hero-action').click();
+    await expect(page).toHaveURL(new RegExp(`${target}$`));
+    expect(await page.evaluate(() => window.__navigationCheck)).toBe(true);
     expect(errors).toEqual([]);
   });
 }

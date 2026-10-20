@@ -1,0 +1,217 @@
+/* One visual system for every authenticated role. */
+.app-shell, .modal, .toast {
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+}
+#appPage {
+  --sidebar-width: 250px;
+  --page: #f6f8f7;
+  --surface-soft: #f6f8f7;
+  --line: #e6ece8;
+  --line-strong: #dce5df;
+  --text: #243c32;
+  --text-soft: #61796b;
+  --text-muted: #697d70;
+  --accent: #2f7155;
+  --brand-700: #2f7155;
+  --radius-md: 16px;
+  --radius-lg: 20px;
+  --shadow-xs: 0 2px 5px #244b3510;
+  color: var(--text);
+  background: var(--page);
+}
+#appPage .workspace { background: var(--page); }
+#appPage .sidebar { padding: 29px 18px 20px; color: #5f7267; background: #fff; border-right: 1px solid var(--line); box-shadow: none; }
+#appPage .sidebar::after { display: none; }
+#appPage .side-brand-row { min-height: 65px; margin-bottom: 14px; }
+#appPage .side-brand { gap: 12px; padding: 0 9px 20px; border: 0 !important; }
+#appPage .side-brand .brand-symbol { width: 43px; height: 47px; border: 0 !important; box-shadow: none !important; border-radius: 0; }
+#appPage .side-brand .brand-symbol img { width: 34px; height: 43px; object-fit: contain; }
+#appPage .side-brand-text strong { color: #254938 !important; font-size: 21px; letter-spacing: -.7px; font-weight: 750; }
+#appPage .side-brand-text span { color: #85938b !important; font-size: 11px; margin-top: 2px; }
+#appPage .sidebar-close { display: none; }
+#appPage .menu-caption { padding: 12px 13px 15px; color: #9ba69f; font-size: 10px; font-weight: 650; letter-spacing: 1.25px; }
+#appPage .menu { gap: 7px; }
+#appPage .menu a { min-height: 48px; padding: 0 13px; gap: 12px; color: #6d7b73; font-size: 13px; font-weight: 550; border: 1px solid transparent; border-radius: 10px; }
+#appPage .menu a:hover { color: #2f7155 !important; background: #f1f6f2; border-color: transparent; transform: none; }
+#appPage .menu a.active { color: #fff !important; background: #306f53; border-color: #306f53; box-shadow: 0 4px 9px #2f71551a; font-weight: 600; }
+#appPage .menu a.active::after { content: ""; width: 5px; height: 5px; border-radius: 50%; background: #a9d7bd; margin-left: auto; }
+#appPage .menu-icon { width: 22px; height: 24px; flex-basis: 22px; color: #8b9a90; border-radius: 0; background: none; }
+#appPage .menu-icon svg { width: 20px; height: 20px; stroke-width: 1.65; }
+#appPage .menu a.active .menu-icon { color: #d4edde !important; background: none; }
+#appPage .menu a:hover .menu-icon { color: #2f7155; }
+#appPage .menu a.active:hover .menu-icon { color: #d4edde; }
+#appPage .sidebar-support { position: relative; display: block; margin: 24px 0 17px; padding: 18px 15px 15px; border: 1px solid #e5ede5; border-radius: 13px; background: #f4f7f0; }
+#appPage .sidebar-support .support-mark { display: grid; place-items: center; width: 32px; height: 32px; margin-bottom: 11px; border: 1px solid #dde7d7; border-radius: 9px; color: #52794c; background: #fff; }
+#appPage .support-mark svg { width: 19px; height: 19px; }
+#appPage .sidebar-support strong { font-size: 12px; color: #3f5945; font-weight: 650; }
+#appPage .sidebar-support div > span { margin-top: 5px; color: #8a9687; font-size: 11px; line-height: 1.7; }
+#appPage .sidebar-support a { display: flex; justify-content: space-between; color: #547b52; font-size: 11px; font-weight: 650; margin-top: 14px; }
+#appPage .sidebar-support a span { color: inherit; font-size: 15px; }
+#appPage .logout-btn { justify-content: flex-start; gap: 12px; min-height: 43px; padding: 0 14px; color: #738076 !important; border-radius: 9px; background: transparent; box-shadow: none; font-size: 12px; }
+#appPage .logout-btn:hover { color: #ac4b4b !important; background: #fff4f2; box-shadow: none; transform: none; }
+#appPage .topbar { min-height: 88px; padding: 15px 34px; gap: 16px; background: #ffffffed; border-bottom: 1px solid var(--line); backdrop-filter: blur(14px); }
+#appPage .topbar-left { min-width: 0; }
+#appPage .eyebrow { color: #94a098; font-size: 10px; text-transform: none; font-weight: 400; letter-spacing: .1px; margin: 0 0 6px; }
+#appPage .eyebrow span { margin: 0 8px; color: #c3ccc6; }
+#appPage .topbar h2 { max-width: none; color: #304b3b; font-size: 21px; line-height: 1.2; font-weight: 650; letter-spacing: -.55px; }
+#appPage .topbar-right { gap: 24px; flex-shrink: 0; }
+#appPage .today-pill { gap: 8px; min-height: 30px; padding: 0; border: 0; border-radius: 0; color: #8a978f; background: transparent; font-size: 11px; }
+#appPage .today-pill svg { width: 16px; height: 16px; color: #8fa594; }
+#appPage .user-pill { max-width: 250px; padding: 0 0 0 22px; gap: 10px; border: 0; border-left: 1px solid #e6ece8; border-radius: 0; box-shadow: none; background: none; }
+#appPage .user-pill::before { width: 37px; height: 37px; flex-basis: 37px; color: #4d745c; background: #ecf1e6; border: 1px solid #e3eada; border-radius: 50%; font-size: 12px; font-weight: 650; }
+#appPage .account-copy { display: grid; gap: 3px; min-width: 0; }
+#appPage .account-copy strong { overflow: hidden; text-overflow: ellipsis; color: #3c5143; font-size: 12px; font-weight: 650; }
+#appPage .account-copy span { color: #9ba69f; font-size: 10px; font-weight: 400; }
+#appPage .content { max-width: 1560px; padding: 30px 34px 22px; gap: 22px; }
+#appPage .dashboard-hero { min-height: 238px; padding: 31px 34px; gap: 18px; border: 1px solid #e3e8d8; border-radius: 18px; background: #eff2e7; box-shadow: none; }
+#appPage .dashboard-hero::before, #appPage .dashboard-hero::after { display: none; }
+#appPage .hero-copy { max-width: 650px; }
+#appPage .hero-kicker { display: flex; align-items: center; gap: 7px; margin-bottom: 13px; color: #58724f; font-size: 10px; font-weight: 650; letter-spacing: 1.2px; }
+#appPage .live-dot { display: inline-block; width: 6px; height: 6px; flex: 0 0 6px; border-radius: 50%; background: #81a770; }
+#appPage .hero-copy h3 { max-width: 640px; margin: 0 0 12px; color: #2b4a34; font-size: clamp(23px, 2.1vw, 32px); font-weight: 650; letter-spacing: -1px; line-height: 1.35; }
+#appPage .greeting-spark { display: inline-block; margin-left: 3px; color: #c8a568; font-size: .8em; }
+#appPage .hero-copy p { max-width: 505px; margin: 0; color: #60745b; font-size: 13px; line-height: 1.85; }
+#appPage .hero-action { margin-top: 21px; gap: 18px; min-height: 38px; padding: 0 16px; border-radius: 8px; font-size: 11px; }
+#appPage .hero-action svg { width: 15px; height: 15px; }
+#appPage .hero-art { display: block; width: 310px; height: 204px; flex: 0 0 310px; margin: -10px -8px -10px 0; color: #527f6b; border: 0; border-radius: 0; background: none; box-shadow: none; backdrop-filter: none; }
+#appPage .hero-art .campus-scene { display: block; width: 100%; height: 100%; stroke: none; }
+#appPage .section-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 4px 0 -8px; }
+#appPage .section-heading h3, #appPage .panel-heading h3 { margin: 0; font-size: 16px; font-weight: 650; letter-spacing: -.35px; color: #354e3f; }
+#appPage .section-heading p, #appPage .panel-heading p { margin: 5px 0 0; font-size: 12px; line-height: 1.6; color: #697e6e; }
+#appPage .section-note { display: flex; align-items: center; gap: 6px; color: #98a29b; font-size: 10px; white-space: nowrap; }
+#appPage .section-note .live-dot { width: 5px; height: 5px; flex-basis: 5px; background: #8aaa87; }
+#appPage .dashboard-metrics { gap: 15px; }
+#appPage .stat-card { min-height: 137px; padding: 18px 21px; justify-content: flex-start; gap: 0; border: 1px solid var(--line); border-radius: 13px; box-shadow: 0 2px 4px #233c2c03; }
+#appPage .stat-card::before, #appPage .stat-card::after { display: none; }
+#appPage .stat-card:hover { transform: translateY(-2px); border-color: #cbdccf; box-shadow: 0 6px 16px #203e2e08; }
+#appPage .metric-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+#appPage .stat-card .metric-label { max-width: none; margin: 0; color: #617569 !important; font-size: 12px; letter-spacing: 0; font-weight: 500; }
+#appPage .metric-icon { display: grid; place-items: center; width: 32px; height: 32px; flex-shrink: 0; color: #648972; background: #edf4ee; border: 1px solid #e8f0e9; border-radius: 9px; }
+#appPage .metric-icon svg { width: 17px; height: 17px; stroke-width: 1.6; }
+#appPage .metric-blue .metric-icon { color: #7a94ad; background: #f0f4f8; border-color: #e8eef5; }
+#appPage .metric-amber .metric-icon { color: #b79a66; background: #faf5e9; border-color: #f5ecd7; }
+#appPage .metric-rose .metric-icon { color: #b18782; background: #faf0ec; border-color: #f4e7e3; }
+#appPage .stat-card strong { margin: 4px 0 6px; color: #294735 !important; font-size: 30px; font-weight: 650; letter-spacing: -1px; line-height: 1.15; font-variant-numeric: tabular-nums; }
+#appPage .stat-card strong.metric-money { font-size: clamp(21px, 2.15vw, 29px); letter-spacing: -.8px; overflow-wrap: anywhere; }
+#appPage .metric-caption { color: #697d70; font-size: 11px; font-weight: 400; }
+#appPage .dashboard-bottom { display: grid; grid-template-columns: minmax(0, 1.9fr) minmax(260px, 1fr); gap: 20px; }
+#appPage .card { padding: 23px; border-radius: 14px; border-color: var(--line); box-shadow: 0 2px 4px #233c2c03; }
+#appPage .card * { z-index: auto; }
+#appPage .card h3 { font-size: 16px; color: #354e3f; font-weight: 650; letter-spacing: -.35px; }
+#appPage .card h3::before { display: none; }
+#appPage .panel-heading { display: flex; align-items: center; justify-content: space-between; gap: 15px; margin-bottom: 18px; }
+#appPage .panel-heading h3 { margin: 0; }
+#appPage .panel-heading-icon { width: 29px; height: 29px; display: grid; place-items: center; color: #c1ad78; background: #fbf8ef; border-radius: 8px; }
+#appPage .panel-heading-icon svg { width: 16px; height: 16px; }
+#appPage .quick-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+#appPage .quick-action { display: flex; align-items: center; gap: 10px; min-width: 0; padding: 13px 12px; border: 1px solid #edf0ed; border-radius: 9px; text-decoration: none; transition: background .15s, border-color .15s; }
+#appPage .quick-action:hover { background: #f7faf6; border-color: #d9e5d6; }
+#appPage .quick-action > .menu-icon { width: 31px; height: 33px; flex-basis: 31px; color: #77907b; background: #f1f5ef; border-radius: 8px; }
+#appPage .quick-action .menu-icon svg { width: 18px; height: 18px; }
+#appPage .quick-action > div { min-width: 0; }
+#appPage .quick-action strong { display: block; color: #405c49; font-size: 12px; font-weight: 600; }
+#appPage .quick-action div span { display: block; margin-top: 4px; color: #687c6d; font-size: 11px; line-height: 1.6; }
+#appPage .quick-arrow { margin-left: auto; color: #a8b3a8; flex-shrink: 0; }
+#appPage .quick-arrow svg { width: 13px; height: 13px; }
+#appPage .guide-panel { display: flex; flex-direction: column; background: #f2f5ed; border-color: #e7ecdf; }
+#appPage .guide-eyebrow { margin-bottom: 10px; color: #6b805b; font-size: 9px; letter-spacing: 1px; font-weight: 650; }
+#appPage .guide-panel h3 { display: block; margin: 0; color: #526746; font-size: 22px; font-weight: 600; line-height: 1.4; letter-spacing: -.6px; }
+#appPage .guide-panel ol { display: grid; gap: 11px; list-style: none; counter-reset: steps; margin: 19px 0 24px; padding: 0; }
+#appPage .guide-panel li { display: flex; align-items: center; gap: 9px; color: #647957; font-size: 12px; line-height: 1.7; counter-increment: steps; }
+#appPage .guide-panel li::before { content: counter(steps, decimal-leading-zero); color: #9faa91; font-size: 9px; font-weight: 650; }
+#appPage .text-link { display: inline-flex; align-items: center; gap: 8px; color: #4c7442; font-size: 11px; font-weight: 600; }
+#appPage .guide-panel .text-link { margin-top: auto; }
+#appPage .text-link svg { width: 13px; height: 13px; }
+#appPage .recent-item { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 13px 0; border-top: 1px solid var(--line); }
+#appPage .recent-item strong { display: block; color: #536b5c; font-size: 12px; font-weight: 550; }
+#appPage .recent-item div span { display: block; margin-top: 4px; color: #99a59d; font-size: 11px; }
+#appPage .dashboard-footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; color: #a7b0a9; font-size: 9px; padding: 0 2px; }
+
+/* Forms, reports and catalogs share the same spacing and color palette. */
+#appPage .btn, .modal .btn { min-height: 40px; padding: 0 16px; border-radius: 8px; font-size: 12px; box-shadow: none; }
+#appPage .btn.primary, .modal .btn.primary { color: #fff; background: #337354; box-shadow: 0 3px 6px #33735412; }
+#appPage .btn.primary:hover, .modal .btn.primary:hover { background: #285d43; box-shadow: 0 3px 9px #3373541c; }
+#appPage .btn.secondary, .modal .btn.secondary { background: #f3f6f3; border: 1px solid #e0e7e0; color: #647567; }
+#appPage .btn.small, .modal .btn.small { min-height: 30px; font-size: 11px; padding: 0 10px; border-radius: 6px; }
+#appPage .filter-row { background: #f7f9f7; border-color: #e8ede8; border-radius: 9px; padding: 13px; }
+#appPage input, #appPage select, #appPage textarea, .modal input, .modal select, .modal textarea { border-color: #dfe6df; border-radius: 8px; color: #526357; font-size: 12px; }
+#appPage input:focus, #appPage select:focus, #appPage textarea:focus, .modal input:focus, .modal select:focus, .modal textarea:focus { border-color: #88ab91; box-shadow: 0 0 0 3px #66977410; }
+#appPage label, .modal label { color: #758276; font-size: 12px; font-weight: 500; }
+#appPage .table-wrap { border-color: #e8ede7; border-radius: 10px; }
+#appPage th { color: #8a978d; border-bottom-color: #e5ece4; background: #f6f8f4; font-size: 10px; font-weight: 600; letter-spacing: .3px; padding: 14px; }
+#appPage td { color: #647568; border-bottom-color: #edf1eb; font-size: 12px; padding: 15px 14px; }
+#appPage tbody tr:hover td { background: #fafcf9; }
+#appPage .muted { color: #738376; font-size: 11px; }
+#appPage .status { padding: 5px 9px; border-radius: 6px; font-size: 10px; font-weight: 500; letter-spacing: 0; }
+#appPage .status.ok { background: #eef5e9; color: #537b40; border-color: #e3eddc; }
+#appPage .status.warn { background: #fbf5e6; color: #947734; border-color: #f4eacb; }
+.modal .modal-card { border-radius: 16px; box-shadow: 0 24px 100px #1f3e2d2b; }
+.modal .modal-head { background: #fafcf8; border-bottom-color: #edf0e9; }
+.modal .modal-head h3 { color: #3e5a46; font-size: 17px; font-weight: 600; }
+.modal .modal-foot { background: #fafcf8; border-top-color: #edf0e9; }
+#appPage a:focus-visible { outline: 2px solid #729b7d; outline-offset: 3px; }
+
+@media (min-width: 1700px) {
+  #appPage .content { padding-top: 34px; }
+  #appPage .dashboard-hero { min-height: 258px; }
+}
+@media (max-width: 1200px) {
+  #appPage { --sidebar-width: 225px; }
+  #appPage .content { padding: 24px; }
+  #appPage .topbar { padding: 15px 24px; }
+  #appPage .hero-art { width: 230px; flex-basis: 230px; }
+  #appPage .hero-copy h3 { font-size: 25px; }
+  #appPage .dashboard-bottom { grid-template-columns: minmax(0, 1.7fr) minmax(240px, 1fr); gap: 16px; }
+  #appPage .quick-grid { grid-template-columns: 1fr; }
+  #appPage .today-pill { display: none; }
+}
+@media (max-width: 960px) {
+  #appPage { --sidebar-width: 250px; }
+  #appPage .sidebar { box-shadow: 10px 0 40px #29433214; }
+  #appPage .sidebar-close { display: grid; width: 29px; height: 29px; position: absolute; right: -4px; top: 3px; color: #748974 !important; background: #f5f8f2 !important; border-color: #e6ece3 !important; }
+  #appPage .mobile-menu-btn { display: grid; color: #628169; border: 1px solid #e5ebe1; background: #f7faf4; border-radius: 9px; width: 35px; height: 35px; flex-shrink: 0; }
+  #appPage .topbar { min-height: 78px; }
+  #appPage .quick-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #appPage .dashboard-bottom { grid-template-columns: 1fr; }
+  #appPage .guide-panel ol { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  #appPage .guide-panel h3 br { display: none; }
+  #appPage .dashboard-metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 720px) {
+  #appPage .topbar { padding: 14px 18px; min-height: 74px; }
+  #appPage .topbar h2 { font-size: 19px; }
+  #appPage .topbar .eyebrow { display: block; font-size: 9px; }
+  #appPage .eyebrow span { margin: 0 4px; }
+  #appPage .user-pill { padding-left: 13px; max-width: none; min-width: 51px; overflow: visible; }
+  #appPage .account-copy { display: none; }
+  #appPage .topbar-right { gap: 0; }
+  #appPage .content { padding: 20px 18px; gap: 18px; }
+  #appPage .dashboard-hero { min-height: auto; padding: 26px; }
+  #appPage .hero-art { display: none; }
+  #appPage .hero-copy h3 { font-size: 26px; }
+  #appPage .hero-copy p { font-size: 12px; }
+  #appPage .dashboard-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  #appPage .stat-card { min-height: 133px; padding: 16px; }
+  #appPage .metric-top { align-items: flex-start; }
+  #appPage .metric-icon { width: 27px; height: 27px; border-radius: 7px; }
+  #appPage .metric-icon svg { width: 15px; height: 15px; }
+  #appPage .stat-card .metric-label { font-size: 11px; }
+  #appPage .stat-card strong { font-size: 27px; margin-top: 9px; }
+  #appPage .stat-card strong.metric-money { font-size: 20px; }
+  #appPage .metric-caption { font-size: 10px; }
+  #appPage .section-note { display: none; }
+  #appPage .quick-grid { grid-template-columns: 1fr; }
+  #appPage .card { padding: 20px; }
+  #appPage .guide-panel ol { grid-template-columns: 1fr; }
+  #appPage .section-heading { margin-bottom: -5px; }
+  #appPage .dashboard-footer span:last-child { display: none; }
+}
+@media (max-width: 380px) {
+  #appPage .content { padding: 16px 12px; }
+  #appPage .dashboard-hero { padding: 22px; }
+  #appPage .stat-card { padding: 14px 12px; }
+  #appPage .metric-top { gap: 4px; }
+  #appPage .stat-card strong.metric-money { font-size: 18px; }
+}

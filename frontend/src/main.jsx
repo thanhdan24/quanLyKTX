@@ -4,6 +4,7 @@ import { AuthProvider } from './context/AuthContext';
 import App from './App';
 import '../assets/styles.css';
 import './styles.css';
+import './workspace.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(<>
   <div id="toast" className="toast" aria-live="polite" />
