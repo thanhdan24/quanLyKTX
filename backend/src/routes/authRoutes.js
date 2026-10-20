@@ -3,9 +3,6 @@
 module.exports = function registerRoutes(app, ctx) {
   const { path, FRONTEND_DIR, sql, poolPromise, auth, allow, asyncHandler, requireFields, assertAllowed, toPositiveInt, toPositiveMoney, normalizeText, sha256, signToken, publicUser, getStudentByUser, confirmedPaid, roomOccupancy, getApplicationForAccess } = ctx;
 
-  app.get('/', (req, res) => {
-    res.sendFile(path.join(FRONTEND_DIR, 'index.html'));
-  });
 
   app.post('/api/auth/login', asyncHandler(async (req, res) => {
     requireFields(req.body, ['username', 'password']);

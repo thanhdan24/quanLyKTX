@@ -1,0 +1,25 @@
+#root { min-height: 100vh; }
+.public-nav { display: flex; flex-wrap: wrap; gap: 10px 18px; margin-bottom: 28px; }
+.public-nav a { color: var(--text-soft); text-decoration: none; font-weight: 600; }
+.public-nav a:hover, .public-nav a.active { color: var(--brand-700); }
+.side-brand-row { display: flex; align-items: center; position: relative; }
+.side-brand { text-decoration: none; flex: 1; min-width: 0; }
+.menu a { text-decoration: none; }
+.login-error { color: var(--red-700); background: var(--red-50); padding: 12px; border-radius: 10px; }
+.info-page { min-height: 100vh; padding: 24px; background: var(--surface-soft); }
+.info-header { max-width: 1100px; margin: 0 auto 32px; display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+.info-header .public-nav { margin: 0; }
+.info-brand { display: flex; align-items: center; gap: 12px; color: var(--text); font-size: 24px; font-weight: 700; text-decoration: none; }
+.info-brand img { width: 56px; height: 56px; object-fit: contain; }
+.info-content { max-width: 1100px; margin: auto; line-height: 1.8; }
+.info-content h1 { font-size: clamp(26px, 5vw, 40px); }
+.info-content h2 { font-size: 22px; }
+.info-content li { margin-bottom: 12px; }
+.info-content .btn { margin-top: 20px; text-decoration: none; }
+.status-page { min-height: 100vh; display: grid; place-items: center; padding: 24px; background: var(--surface-soft); }
+.status-page .card { width: min(100%, 700px); }
+.status-page .btn { text-decoration: none; }
+@media (max-width: 600px) {
+  .info-page { padding: 16px; }
+  .public-nav { gap: 10px 14px; font-size: 13px; }
+}

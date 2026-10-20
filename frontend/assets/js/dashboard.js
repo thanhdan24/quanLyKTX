@@ -1,3 +1,5 @@
+import { content, currentUser, esc, money, api } from './core.js';
+
 'use strict';
 
 async function renderDashboard() {
@@ -45,3 +47,5 @@ async function renderDashboard() {
   `;
 }
 
+
+export { renderDashboard };

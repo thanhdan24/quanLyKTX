@@ -1,3 +1,5 @@
+import { $, content, currentUser, requestLabels, labels, esc, money, date, dt, badge, api, queryString, filterValues, runAction, table, formData, optionRows } from './core.js';
+
 'use strict';
 
 async function renderStudentProfile() {
@@ -128,3 +130,5 @@ async function renderStudentRequests() {
 }
 
 
+
+export { renderStudentProfile, renderStudentRegister, renderApplications, renderStudentPayments, renderStudentRequests };

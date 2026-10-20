@@ -1,5 +1,7 @@
 # Bản modular dễ quản lý
 
+Frontend đã bổ sung **React + Vite + React Router**. Xem [đối chiếu 7 yêu cầu và hướng dẫn chạy React](docs/REACT_REQUIREMENTS.md). Khi chạy cùng backend, cần build trước: `cd frontend`, `npm.cmd ci`, `npm.cmd run build`; sau đó chạy backend như bên dưới.
+
 Dự án đã được tách nhỏ theo backend routes/services/middleware và frontend theo từng vai trò người dùng. Xem chi tiết trong `docs/PROJECT_STRUCTURE.md`.
 
 # Website quản lý ký túc xá - bản full-stack
@@ -11,7 +13,7 @@ Dự án được hoàn thiện theo 2 file yêu cầu:
 
 ## 1. Ngôn ngữ / công nghệ sử dụng
 
-- Frontend: HTML, CSS, JavaScript thuần.
+- Frontend: React 19 + Vite 7 + React Router; JSX, CSS và các ES modules nghiệp vụ được giữ lại từ giao diện cũ.
 - Backend: Node.js + Express.
 - Database: SQL Server, ngôn ngữ SQL/T-SQL.
 - Kết nối SQL Server: thư viện `mssql`.
@@ -135,7 +137,7 @@ Mở trình duyệt:
 http://localhost:3000
 ```
 
-Backend đã serve luôn frontend, nên không bắt buộc chạy Live Server.
+Backend phục vụ bản React đã build trong `frontend/dist`. Chạy `npm.cmd ci` và `npm.cmd run build` trong `frontend` trước khi mở website. Khi phát triển, chạy thêm `npm.cmd run dev` trong `frontend` để dùng Vite tại http://127.0.0.1:5173 (API proxy tới backend cổng 3000). Không dùng Live Server để chạy source React.
 
 ## 7. Tài khoản demo
 

@@ -1,13 +1,25 @@
 'use strict';
 
-const API_BASE = localStorage.getItem('QLKTX_API_BASE') || (location.port === '3000' ? '' : 'http://localhost:3000');
+const API_BASE = import.meta.env.VITE_API_BASE || localStorage.getItem('QLKTX_API_BASE') || '';
 const TOKEN_KEY = 'QLKTX_TOKEN_FULLSTACK';
 const USER_KEY = 'QLKTX_USER_FULLSTACK';
 
 const $ = (id) => document.getElementById(id);
-const content = $('content');
+let content = null;
 let currentUser = null;
 let currentView = 'dashboard';
+let pageController = null;
+
+function setCurrentUser(user) {
+  currentUser = user;
+}
+
+// React owns navigation; existing business forms own only their content element.
+function mountView(element, view, controller) {
+  content = element;
+  currentView = view;
+  pageController = controller;
+}
 
 const roleNames = {
   STUDENT: 'Sinh viên',
@@ -141,16 +153,20 @@ function token() {
 }
 
 async function api(path, options = {}) {
+  const signal = options.signal || (path.startsWith('/api/auth/') || (options.method && options.method !== 'GET') ? undefined : pageController?.signal);
+  signal?.throwIfAborted();
   const headers = { 'Content-Type': 'application/json', ...(options.headers || {}) };
   const tk = token();
   if (tk) headers.Authorization = `Bearer ${tk}`;
-  const response = await fetch(`${API_BASE}${path}`, { ...options, headers });
+  const response = await fetch(`${API_BASE}${path}`, { ...options, headers, signal });
   let data = null;
   const text = await response.text();
+  signal?.throwIfAborted();
   if (text) {
     try { data = JSON.parse(text); } catch { data = { message: text }; }
   }
   if (!response.ok) {
+    if (response.status === 401 && !path.startsWith('/api/auth/')) window.dispatchEvent(new Event('qlktx:unauthorized'));
     const error = new Error(data?.message || `Lỗi HTTP ${response.status}`);
     error.status = response.status;
     throw error;
@@ -183,12 +199,15 @@ function validForm(id) {
 }
 
 async function runAction(action, successMessage, reloadView = currentView) {
+  const origin = pageController;
   try {
     const result = await action();
+    if (origin?.signal.aborted) return;
     toast(result?.message || successMessage || 'Thao tác thành công.');
     closeModal();
-    if (reloadView) await navigate(reloadView);
+    if (reloadView) window.navigate(reloadView);
   } catch (error) {
+    if (origin?.signal.aborted || error.name === 'AbortError') return;
     toast(error.message || 'Thao tác thất bại. Kiểm tra lại dữ liệu hoặc kết nối backend.');
   }
 }
@@ -199,6 +218,10 @@ async function deleteRecord(url, confirmMessage, successMessage) {
 }
 
 window.addEventListener('unhandledrejection', (event) => {
+  if (event.reason?.name === 'AbortError') {
+    event.preventDefault();
+    return;
+  }
   toast(event.reason?.message || 'Có lỗi xảy ra khi xử lý thao tác.');
 });
 
@@ -232,4 +255,12 @@ function optionRows(items, idKey, textKey, selected = '') {
 }
 
 window.closeModal = closeModal;
+
+export {
+  $, API_BASE, TOKEN_KEY, USER_KEY, content, currentUser, currentView,
+  setCurrentUser, mountView, roleNames, requestLabels, labels, menus,
+  menuIcon, titles, esc, money, date, dt, today, badge, toast, token, api,
+  queryString, filterValues, validForm, runAction, deleteRecord, table,
+  formData, closeModal, showModal, optionRows,
+};
 

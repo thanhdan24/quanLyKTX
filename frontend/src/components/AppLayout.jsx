@@ -1,0 +1,66 @@
+import { useEffect, useState } from 'react';
+import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { menus, menuIcon, roleNames, titles } from '../../assets/js/core';
+import logo from '../../assets/images/ptit-logo.png';
+
+export default function AppLayout() {
+  const { user, logout } = useAuth();
+  const [open, setOpen] = useState(false);
+  const location = useLocation();
+  const view = location.pathname.split('/')[1];
+  const initial = user.FullName.trim().split(/\s+/).slice(-2).map(part => part[0]).join('').toUpperCase();
+  const today = new Intl.DateTimeFormat('vi-VN', { weekday: 'short', day: '2-digit', month: '2-digit', year: 'numeric' }).format(new Date());
+
+  useEffect(() => { setOpen(false); }, [location.pathname]);
+  useEffect(() => {
+    function closeOnResize() { if (window.innerWidth > 960) setOpen(false); }
+    function closeOnEscape(event) { if (event.key === 'Escape') setOpen(false); }
+    window.addEventListener('resize', closeOnResize);
+    window.addEventListener('keydown', closeOnEscape);
+    return () => {
+      window.removeEventListener('resize', closeOnResize);
+      window.removeEventListener('keydown', closeOnEscape);
+    };
+  }, []);
+  useEffect(() => {
+    document.body.style.overflow = open && window.innerWidth <= 960 ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [open]);
+
+  return <main id="appPage" className="app-shell">
+    <div id="sidebarBackdrop" className="sidebar-backdrop" hidden={!open} onClick={() => setOpen(false)} />
+    <aside id="sidebar" className={`sidebar${open ? ' open' : ''}`}>
+      <div className="side-brand-row">
+        <Link to="/dashboard" id="brandLink" className="side-brand" title="Quay lại trang chủ">
+          <span className="brand-symbol compact"><img src={logo} alt="Logo PTIT" /></span>
+          <div className="side-brand-text"><strong>KTX PTIT</strong><span id="roleText">{roleNames[user.Role]}</span></div>
+        </Link>
+        <button id="closeSidebarBtn" className="sidebar-close" type="button" aria-label="Đóng menu" onClick={() => setOpen(false)}>
+          <svg viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18" /></svg>
+        </button>
+      </div>
+      <div className="menu-caption">Điều hướng</div>
+      <nav id="menu" className="menu" aria-label="Chức năng ký túc xá">
+        {(menus[user.Role] || []).map(([key, title]) => <NavLink key={key} to={`/${key}`} end>
+          <span dangerouslySetInnerHTML={{ __html: menuIcon(key) }} />
+          <span className="menu-text">{title}</span>
+        </NavLink>)}
+      </nav>
+      <div className="sidebar-support"><div><strong>Cần hỗ trợ?</strong><span>Liên hệ quản trị viên</span></div></div>
+      <button id="logoutBtn" className="btn logout-btn full" type="button" onClick={logout}>
+        <svg viewBox="0 0 24 24"><path d="M10 17l5-5-5-5M15 12H3M14 3h5a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-5" /></svg><span>Đăng xuất</span>
+      </button>
+    </aside>
+    <section className="workspace">
+      <header className="topbar">
+        <div className="topbar-left">
+          <button id="mobileMenuBtn" className="mobile-menu-btn" type="button" aria-label="Mở menu" aria-expanded={open} aria-controls="sidebar" onClick={() => setOpen(true)}><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16" /></svg></button>
+          <div><p className="eyebrow">Hệ thống quản lý Ký túc xá PTIT</p><h2 id="viewTitle">{titles[view] || 'Chức năng'}</h2></div>
+        </div>
+        <div className="topbar-right"><div className="today-pill">{today}</div><div className="user-pill" id="userPill" data-initial={initial}>{user.FullName} · {roleNames[user.Role]}</div></div>
+      </header>
+      <Outlet />
+    </section>
+  </main>;
+}

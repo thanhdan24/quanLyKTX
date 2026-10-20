@@ -1,3 +1,5 @@
+import { content, roleNames, labels, esc, money, date, badge, api, validForm, runAction, deleteRecord, table, formData, closeModal, showModal, optionRows } from './core.js';
+
 'use strict';
 
 async function renderUsers() {
@@ -179,3 +181,5 @@ window.openPeriodForm = openPeriodForm;
 window.submitPeriod = submitPeriod;
 window.deletePeriod = deletePeriod;
 
+
+export { renderUsers, renderStudents, renderBuildings, renderRooms, renderPeriods };

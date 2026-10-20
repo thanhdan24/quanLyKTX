@@ -779,7 +779,7 @@ svg {
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
 }
-.menu button {
+.menu a {
   position: relative;
   width: 100%;
   min-height: 45px;
@@ -802,13 +802,13 @@ svg {
     border-color 0.16s,
     transform 0.16s;
 }
-.menu button:hover {
+.menu a:hover {
   color: #0f2029;
   border-color: rgba(61, 220, 145, 0.16);
   background: rgba(61, 220, 145, 0.14);
   transform: translateX(2px);
 }
-.menu button.active {
+.menu a.active {
   color: #0f2029;
   border-color: rgba(61, 220, 145, 0.18);
   background: rgba(61, 220, 145, 0.12);
@@ -831,11 +831,11 @@ svg {
   width: 18px;
   height: 18px;
 }
-.menu button.active .menu-icon {
+.menu a.active .menu-icon {
   color: var(--accent);
   background: rgba(61, 220, 145, 0.14);
 }
-.menu button:hover .menu-icon {
+.menu a:hover .menu-icon {
   color: #f1f8f6;
 }
 .menu-text {
@@ -2230,13 +2230,13 @@ td .muted {
 /* ===== CHỈNH SÁNG MÀU CHỮ SIDEBAR MENU ===== */
 
 /* 1. Chữ của menu khi được chọn (Active) và khi di chuột (Hover) */
-.menu button.active,
-.menu button:hover {
+.menu a.active,
+.menu a:hover {
   color: #ffffff !important; /* Ép sang màu trắng tinh */
 }
 
 /* 2. Tùy chỉnh Icon của menu đang chọn cho rực rỡ hơn */
-.menu button.active .menu-icon {
+.menu a.active .menu-icon {
   color: #3ddc91 !important; /* Xanh lá sáng */
 }
 

@@ -11,12 +11,12 @@ const httpUtils = require("./utils/http");
 const { auth, allow } = require("./middleware/auth");
 const services = require("./services/studentService");
 const { notFoundHandler, errorHandler } = require("./middleware/errorHandler");
+const { serveFrontend } = require("./middleware/serveFrontend");
 
 const app = express();
 
 app.use(cors({ origin: true, credentials: true }));
 app.use(express.json({ limit: "2mb" }));
-app.use(express.static(FRONTEND_DIR));
 
 const ctx = {
   path,
@@ -47,6 +47,7 @@ require("./routes/paymentRoutes.js")(app, ctx);
 require("./routes/requestRoutes.js")(app, ctx);
 require("./routes/reportRoutes.js")(app, ctx);
 
+serveFrontend(app, FRONTEND_DIR);
 app.use(notFoundHandler);
 app.use(errorHandler);
 

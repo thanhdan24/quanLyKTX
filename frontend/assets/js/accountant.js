@@ -1,3 +1,5 @@
+import { $, content, labels, esc, money, dt, badge, api, queryString, filterValues, runAction, table, optionRows } from './core.js';
+
 'use strict';
 
 async function renderAccountantPayments() {
@@ -73,3 +75,5 @@ async function renderFeeReport() {
 
 window.confirmPayment = confirmPayment;
 
+
+export { renderAccountantPayments, renderDebtReport, renderFeeReport };

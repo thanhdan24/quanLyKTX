@@ -1,3 +1,5 @@
+import { $, content, requestLabels, labels, esc, money, dt, today, badge, api, queryString, filterValues, validForm, runAction, table, formData, closeModal, showModal, optionRows } from './core.js';
+
 'use strict';
 
 async function renderManagerApps() {
@@ -152,3 +154,5 @@ window.checkIn = checkIn;
 window.checkOut = checkOut;
 window.processRequest = processRequest;
 
+
+export { renderManagerApps, renderManagerCheckin, renderManagerRequests, renderResidenceReport };
